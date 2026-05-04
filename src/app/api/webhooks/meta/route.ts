@@ -40,15 +40,12 @@ export async function POST(request: Request) {
   try {
     const body = await request.json()
 
-    // We start the processing asynchronously to avoid Meta's 15-second timeout
-    // In a standard Node.js deployment, this detached promise will finish.
-    // In Vercel serverless, it might get killed depending on the plan, 
-    // but for the MVP this is the best lightweight approach.
-    processMetaEvent(body).catch((err) => {
-      console.error('Error processing Meta event in background:', err)
-    })
+    // En Vercel Serverless, si devolvemos el 200 OK antes de terminar, 
+    // la función se congela y muere. Por lo tanto, debemos esperar a que termine.
+    // Meta nos da hasta 15 segundos para responder.
+    await processMetaEvent(body)
 
-    // Return 200 OK immediately
+    // Return 200 OK immediately after processing
     return new NextResponse('EVENT_RECEIVED', { status: 200 })
   } catch (error) {
     console.error('Error parsing webhook body:', error)
