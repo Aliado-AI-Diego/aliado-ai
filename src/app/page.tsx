@@ -42,14 +42,14 @@ export default function LandingPage() {
 
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-border/40">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center shadow-lg shadow-primary/20">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2 shrink-0">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center shadow-lg shadow-primary/20 shrink-0">
               <Bot className="w-5 h-5 text-white" />
             </div>
-            <span className="font-bold text-lg tracking-tight">Aliado AI</span>
+            <span className="font-bold text-lg tracking-tight whitespace-nowrap">Aliado AI</span>
           </Link>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <ThemeToggle />
             <Link href="/login" className="hidden sm:block">
               <Button variant="ghost" className="text-sm font-medium hover:bg-muted/50 rounded-full px-4">
@@ -57,8 +57,9 @@ export default function LandingPage() {
               </Button>
             </Link>
             <Link href="/register">
-              <Button className="text-sm font-medium rounded-full px-5 shadow-apple hover:shadow-apple-hover transition-all">
-                Comenzar gratis
+              <Button className="text-sm font-medium rounded-full px-4 sm:px-5 shadow-apple hover:shadow-apple-hover transition-all">
+                <span className="hidden sm:inline">Comenzar gratis</span>
+                <span className="sm:hidden">Comenzar</span>
                 <ArrowRight className="w-4 h-4 ml-1.5" />
               </Button>
             </Link>
@@ -147,17 +148,17 @@ export default function LandingPage() {
           </p>
         </div>
 
-        <div className="max-w-5xl mx-auto animate-slide-up">
-          <div className="relative rounded-2xl border border-border/40 bg-card/40 backdrop-blur-xl shadow-2xl overflow-hidden aspect-[16/9] flex items-center justify-center">
+        <div className="max-w-5xl mx-auto animate-slide-up px-2 sm:px-0">
+          <div className="relative rounded-2xl border border-border/40 bg-card/40 backdrop-blur-xl shadow-2xl overflow-hidden flex flex-col md:aspect-[16/9] min-h-[400px]">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-purple-500/5"></div>
-            <div className="absolute top-0 left-0 right-0 h-12 border-b border-border/40 flex items-center px-4 gap-2 bg-muted/20">
+            <div className="relative h-12 border-b border-border/40 flex items-center px-4 gap-2 bg-muted/20 shrink-0">
               <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
               <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
               <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
             </div>
             
-            <div className="w-full h-full pt-12 flex">
-              <div className="w-64 border-r border-border/40 p-6 hidden md:block">
+            <div className="w-full flex-1 flex flex-col md:flex-row relative z-10">
+              <div className="w-64 border-r border-border/40 p-6 hidden md:block shrink-0">
                 <div className="h-4 w-24 bg-muted rounded mb-8"></div>
                 <div className="space-y-4">
                   <div className="h-8 w-full bg-primary/10 rounded-lg"></div>
@@ -165,14 +166,14 @@ export default function LandingPage() {
                   <div className="h-8 w-4/5 bg-muted/50 rounded-lg"></div>
                 </div>
               </div>
-              <div className="flex-1 p-8 flex flex-col items-center justify-center">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-blue-500 flex items-center justify-center shadow-lg shadow-primary/20 mb-6 relative">
+              <div className="flex-1 p-6 sm:p-8 flex flex-col items-center justify-center text-center">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-blue-500 flex items-center justify-center shadow-lg shadow-primary/20 mb-6 relative shrink-0">
                   <Bot className="w-8 h-8 text-white" />
                   <div className="absolute -top-2 -right-2 bg-green-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold">ONLINE</div>
                 </div>
-                <h3 className="text-2xl font-bold mb-2">Agente de Ventas</h3>
-                <p className="text-muted-foreground mb-8">Respondiendo WhatsApp y llamadas en tiempo real.</p>
-                <div className="flex gap-4 w-full max-w-md">
+                <h3 className="text-xl sm:text-2xl font-bold mb-2">Agente de Ventas</h3>
+                <p className="text-sm sm:text-base text-muted-foreground mb-8">Respondiendo WhatsApp y llamadas en tiempo real.</p>
+                <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md">
                   <div className="flex-1 bg-card border border-border/50 rounded-xl p-4 shadow-sm text-center">
                     <div className="text-3xl font-bold">1,248</div>
                     <div className="text-xs text-muted-foreground uppercase tracking-wider mt-1">Chats Hoy</div>
