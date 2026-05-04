@@ -8,8 +8,10 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
+import { Switch } from '@/components/ui/switch'
 import { Save, Loader2, CheckCircle2, Building2, User } from 'lucide-react'
 import type { Profile, Company } from '@/types'
+import { PRICING_PLANS } from '@/config/pricing'
 
 export default function SettingsPage() {
   const [profile, setProfile] = useState<Profile | null>(null)
@@ -18,6 +20,7 @@ export default function SettingsPage() {
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [managingBilling, setManagingBilling] = useState(false)
+  const [isAnnualBilling, setIsAnnualBilling] = useState(true)
 
   const [fullName, setFullName] = useState('')
   const [companyName, setCompanyName] = useState('')
@@ -227,45 +230,58 @@ export default function SettingsPage() {
       <Card className="shadow-apple-sm border-border/50">
         <CardHeader>
           <CardTitle className="text-lg">Suscripción</CardTitle>
+          <CardDescription>Escala tu negocio con el plan perfecto para ti.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           {company?.subscription_plan === 'free' || !company?.subscription_plan ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-5 rounded-2xl border border-border/50 bg-background flex flex-col">
-                <p className="text-lg font-bold mb-1">Plan Básico</p>
-                <p className="text-3xl font-bold mb-4">$49<span className="text-sm font-normal text-muted-foreground">/mes</span></p>
-                <ul className="text-sm text-muted-foreground space-y-2 mb-6 flex-1">
-                  <li>• WhatsApp Automático</li>
-                  <li>• 1,000 conversaciones/mes</li>
-                  <li>• 1 Agente de IA</li>
-                </ul>
-                <Button 
-                  onClick={() => handleManageBilling(process.env.NEXT_PUBLIC_STRIPE_BASIC_PRICE_ID)}
-                  disabled={managingBilling}
-                  className="w-full rounded-xl"
-                >
-                  Suscribirse al Básico
-                </Button>
+            <div className="space-y-6">
+              <div className="flex items-center justify-center gap-3">
+                <Label className={`text-sm font-medium ${!isAnnualBilling ? 'text-foreground' : 'text-muted-foreground'}`}>Mensual</Label>
+                <Switch 
+                  checked={isAnnualBilling} 
+                  onCheckedChange={setIsAnnualBilling}
+                  className="data-[state=checked]:bg-primary" 
+                />
+                <Label className={`text-sm font-medium flex items-center gap-1.5 ${isAnnualBilling ? 'text-foreground' : 'text-muted-foreground'}`}>
+                  Anual
+                  <Badge variant="outline" className="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border-none text-[10px]">2 MESES GRATIS</Badge>
+                </Label>
               </div>
-              <div className="p-5 rounded-2xl border-2 border-foreground bg-background relative flex flex-col">
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-foreground text-background text-xs font-bold rounded-full">
-                  Recomendado
-                </div>
-                <p className="text-lg font-bold mb-1">Plan Pro</p>
-                <p className="text-3xl font-bold mb-4">$149<span className="text-sm font-normal text-muted-foreground">/mes</span></p>
-                <ul className="text-sm text-muted-foreground space-y-2 mb-6 flex-1">
-                  <li>• WhatsApp + Llamadas de Voz</li>
-                  <li>• 5,000 conversaciones/mes</li>
-                  <li>• Agentes de IA Ilimitados</li>
-                  <li>• Insights Avanzados</li>
-                </ul>
-                <Button 
-                  onClick={() => handleManageBilling(process.env.NEXT_PUBLIC_STRIPE_PRO_PRICE_ID)}
-                  disabled={managingBilling}
-                  className="w-full rounded-xl"
-                >
-                  Suscribirse al Pro
-                </Button>
+
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                {Object.entries(PRICING_PLANS).map(([key, plan]) => {
+                  const isPopular = key === 'profesional';
+                  const price = isAnnualBilling ? plan.price_annual : plan.price_monthly;
+                  const priceId = isAnnualBilling ? plan.stripe_annual_id : plan.stripe_monthly_id;
+                  
+                  return (
+                    <div key={key} className={`p-5 rounded-2xl bg-background flex flex-col relative transition-all duration-200 ${isPopular ? 'border-2 border-primary shadow-lg lg:-translate-y-2' : 'border border-border/50'}`}>
+                      {isPopular && (
+                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-gradient-to-r from-primary to-blue-500 text-white text-xs font-bold rounded-full shadow-md">
+                          RECOMENDADO
+                        </div>
+                      )}
+                      <p className="text-lg font-bold mb-1">{plan.name}</p>
+                      <p className="text-3xl font-bold mb-4">${price}<span className="text-sm font-normal text-muted-foreground">/{isAnnualBilling ? 'año' : 'mes'}</span></p>
+                      <ul className="text-sm text-muted-foreground space-y-2 mb-6 flex-1">
+                        {plan.features.map((feature, i) => (
+                          <li key={i} className="flex gap-2 items-start">
+                            <span className="text-primary mt-0.5">•</span>
+                            <span>{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <Button 
+                        onClick={() => handleManageBilling(priceId)}
+                        disabled={managingBilling}
+                        variant={isPopular ? 'default' : 'outline'}
+                        className={`w-full rounded-xl ${isPopular ? 'shadow-apple hover:shadow-apple-hover' : 'bg-background hover:bg-muted/50'}`}
+                      >
+                        {managingBilling ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Suscribirse'}
+                      </Button>
+                    </div>
+                  )
+                })}
               </div>
             </div>
           ) : (

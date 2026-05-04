@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe/server'
 import { createClient } from '@supabase/supabase-js'
+import { getPlanIdByStripePriceId } from '@/config/pricing'
 
 // Need service role to update DB from webhook
 const supabaseAdmin = createClient(
@@ -40,10 +41,7 @@ export async function POST(request: Request) {
           const subscription: any = await stripe.subscriptions.retrieve(session.subscription as string)
           const priceId = subscription.items.data[0].price.id
           
-          let plan = 'basic'
-          if (priceId === process.env.NEXT_PUBLIC_STRIPE_PRO_PRICE_ID) {
-            plan = 'pro'
-          }
+          const plan = getPlanIdByStripePriceId(priceId)
 
           await supabaseAdmin
             .from('companies')
@@ -79,7 +77,7 @@ export async function POST(request: Request) {
           let plan = 'free'
           if (status === 'active' || status === 'trialing') {
             const priceId = subscription.items.data[0].price.id
-            plan = priceId === process.env.NEXT_PUBLIC_STRIPE_PRO_PRICE_ID ? 'pro' : 'basic'
+            plan = getPlanIdByStripePriceId(priceId)
           }
 
           await supabaseAdmin
