@@ -453,7 +453,7 @@ export default function LandingPage() {
             </div>
           </div>
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Aliado AI. Todos los derechos reservados.
+            © {new Date().getFullYear()} Aliado AI LLC. Todos los derechos reservados.
           </p>
         </div>
       </footer>
