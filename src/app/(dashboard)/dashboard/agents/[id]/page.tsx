@@ -563,7 +563,7 @@ export default function AgentDetailPage({
 
                 <div className="space-y-2">
                   <Label>Posición en la pantalla</Label>
-                  <Select value={widgetPosition} onValueChange={setWidgetPosition}>
+                  <Select value={widgetPosition} onValueChange={(val) => val && setWidgetPosition(val)}>
                     <SelectTrigger className="h-11 rounded-xl bg-muted/50 border-border/50">
                       <SelectValue placeholder="Selecciona una posición" />
                     </SelectTrigger>
