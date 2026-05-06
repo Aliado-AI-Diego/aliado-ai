@@ -16,11 +16,13 @@ import {
   Menu,
   X,
   Cpu,
+  Inbox,
 } from 'lucide-react'
 import { useState } from 'react'
 
 const navItems = [
   { title: 'Panel', href: '/dashboard', icon: LayoutDashboard },
+  { title: 'Bandeja de Entrada', href: '/dashboard/chats', icon: Inbox },
   { title: 'Agentes', href: '/dashboard/agents', icon: Bot },
   { title: 'Testing Ground', href: '/dashboard/playground', icon: MessageSquare },
   { title: 'Insights', href: '/dashboard/insights', icon: BarChart3 },
