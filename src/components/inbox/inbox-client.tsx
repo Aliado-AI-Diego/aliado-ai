@@ -139,7 +139,7 @@ export function InboxClient({
   const isPaused = selectedConv?.status === 'escalated'
 
   return (
-    <Card className="flex h-full border-border/50 overflow-hidden shadow-apple-sm">
+    <Card className="flex h-full w-full border-border/50 overflow-hidden shadow-apple-sm">
       
       {/* Left Panel: Conversation List */}
       <div className="w-1/3 min-w-[300px] border-r border-border/50 flex flex-col bg-muted/20">
