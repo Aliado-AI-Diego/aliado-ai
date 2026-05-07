@@ -1,0 +1,3 @@
+## 2024-06-25 - [Dashboard Empty States & Suspense Skeletons]
+**Learning:** Professional tools use well-designed empty states to drive activation (e.g. creating the first agent) instead of just displaying zero counts. Furthermore, using a `loading.tsx` file for Next.js async server components provides an automatic, instant shimmer skeleton UI, greatly improving perceived performance over waiting for a full page load.
+**Action:** Replace basic 0-state UIs with prominent calls-to-action utilizing dashed borders, subtle background glows, and brand colors. Always accompany async dashboard pages with a matching `loading.tsx` skeleton layout to mask data fetching time.

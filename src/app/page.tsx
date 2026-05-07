@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
 import { ArrowRight, Bot, BarChart3, MessageSquare, Zap, Shield, Globe, Check, X, PhoneCall, Calendar, Code, PhoneOff, Clock, Moon, FileText, ChevronDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -11,16 +11,26 @@ import { Label } from '@/components/ui/label'
 // Custom Accordion Component
 function FaqAccordionItem({ question, answer }: { question: string, answer: string }) {
   const [isOpen, setIsOpen] = useState(false);
+  const id = React.useId();
+  const buttonId = `faq-button-${id}`;
+  const contentId = `faq-content-${id}`;
+
   return (
     <div className="border border-border/50 rounded-2xl bg-card overflow-hidden transition-all duration-300 shadow-sm">
       <button 
+        id={buttonId}
+        aria-expanded={isOpen}
+        aria-controls={contentId}
         onClick={() => setIsOpen(!isOpen)} 
-        className="w-full px-6 py-5 flex items-center justify-between font-semibold text-left text-foreground hover:bg-muted/30 transition-colors"
+        className="w-full px-6 py-5 flex items-center justify-between font-semibold text-left text-foreground hover:bg-muted/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
       >
         <span>{question}</span>
-        <ChevronDown className={`w-5 h-5 text-muted-foreground transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+        <ChevronDown aria-hidden="true" className={`w-5 h-5 text-muted-foreground transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
       </button>
       <div 
+        id={contentId}
+        role="region"
+        aria-labelledby={buttonId}
         className={`px-6 overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-96 pb-5 opacity-100' : 'max-h-0 opacity-0'}`}
       >
         <p className="text-muted-foreground text-sm leading-relaxed">{answer}</p>
