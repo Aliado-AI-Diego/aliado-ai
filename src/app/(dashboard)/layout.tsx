@@ -59,18 +59,18 @@ export default function DashboardLayout({
       <aside
         className={`
           fixed lg:sticky top-0 left-0 z-50 h-screen w-64 
-          bg-sidebar border-r border-sidebar-border 
+          bg-sidebar/95 backdrop-blur-xl border-r border-sidebar-border 
           flex flex-col transition-transform duration-300
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}
       >
         {/* Logo */}
         <div className="h-16 px-6 flex items-center justify-between">
-          <Link href="/dashboard" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-foreground flex items-center justify-center">
-              <Cpu className="w-4.5 h-4.5 text-background" />
+          <Link href="/dashboard" className="flex items-center gap-2.5 group">
+            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shadow-lg shadow-primary/25 group-hover:scale-105 transition-transform">
+              <Cpu className="w-4.5 h-4.5 text-primary-foreground" />
             </div>
-            <span className="font-semibold text-base tracking-tight">Aliado AI</span>
+            <span className="font-heading font-bold text-lg tracking-tight">Aliado AI</span>
           </Link>
           <button
             onClick={() => setSidebarOpen(false)}
@@ -95,10 +95,10 @@ export default function DashboardLayout({
                 onClick={() => setSidebarOpen(false)}
                 className={`
                   flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium
-                  transition-all duration-200
+                  transition-all duration-300 group relative overflow-hidden
                   ${isActive
-                    ? 'bg-foreground text-background shadow-sm'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                    ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
                   }
                 `}
               >
@@ -128,9 +128,12 @@ export default function DashboardLayout({
       </aside>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col min-h-screen">
+      <div className="flex-1 flex flex-col min-h-screen relative">
+        {/* Decorative background gradient */}
+        <div className="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none -z-10" />
+
         {/* Mobile header */}
-        <header className="lg:hidden h-14 px-4 flex items-center border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-30">
+        <header className="lg:hidden h-14 px-4 flex items-center border-b border-border bg-background/80 backdrop-blur-xl sticky top-0 z-30">
           <button
             onClick={() => setSidebarOpen(true)}
             className="p-2 rounded-lg hover:bg-muted"

@@ -146,25 +146,25 @@ export function InboxClient({
   if (!isMounted) return null // Previene errores de hidratación
 
   return (
-    <Card className="grid grid-cols-[300px_1fr] h-full w-full border-border/50 overflow-hidden shadow-apple-sm">
+    <Card className="grid grid-cols-[300px_1fr] h-full w-full border-border/30 overflow-hidden shadow-premium glass relative">
       
       {/* Left Panel: Conversation List */}
-      <div className="border-r border-border/50 flex flex-col bg-muted/20 h-full overflow-hidden">
-        <div className="p-4 border-b border-border/50">
-          <h2 className="font-semibold text-lg">Bandeja de Entrada</h2>
-          <div className="flex gap-4 mt-4">
+      <div className="border-r border-border/30 flex flex-col bg-card/40 h-full overflow-hidden backdrop-blur-sm relative z-10">
+        <div className="p-5 border-b border-border/30 bg-card/60 backdrop-blur-md">
+          <h2 className="font-heading font-semibold text-xl">Bandeja de Entrada</h2>
+          <div className="flex gap-6 mt-4">
             <div className="flex flex-col">
-              <span className="text-xs text-muted-foreground">Activos</span>
-              <span className="font-bold">{conversations.filter(c => c.status === 'active').length}</span>
+              <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Activos</span>
+              <span className="font-heading font-bold text-lg text-primary">{conversations.filter(c => c.status === 'active').length}</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-xs text-muted-foreground">Pausados</span>
-              <span className="font-bold">{conversations.filter(c => c.status === 'escalated').length}</span>
+              <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Pausados</span>
+              <span className="font-heading font-bold text-lg text-orange-500">{conversations.filter(c => c.status === 'escalated').length}</span>
             </div>
           </div>
         </div>
 
-        <ScrollArea className="flex-1">
+        <ScrollArea className="flex-1 px-2 py-3">
           {conversations.length === 0 ? (
             <div className="p-6 text-center text-sm text-muted-foreground">
               No hay conversaciones todavía.
@@ -178,20 +178,24 @@ export function InboxClient({
                   <button
                     key={conv.id}
                     onClick={() => setSelectedConv(conv)}
-                    className={`w-full text-left p-4 hover:bg-muted/50 transition-colors ${
-                      isSelected ? 'bg-muted border-l-2 border-l-primary' : 'border-l-2 border-l-transparent'
-                    }`}
+                    className={`w-full text-left p-4 rounded-xl mb-1 transition-all duration-300 relative overflow-hidden group
+                      ${isSelected 
+                        ? 'bg-primary/10 shadow-[inset_4px_0_0_0_#2D6EFF]' 
+                        : 'hover:bg-muted/50 border border-transparent hover:border-border/50'
+                      }
+                    `}
                   >
-                    <div className="flex justify-between items-start mb-1">
-                      <span className="font-medium truncate pr-2 text-sm">
+                    {isSelected && <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent pointer-events-none" />}
+                    <div className="flex justify-between items-start mb-1 relative z-10">
+                      <span className={`font-semibold truncate pr-2 text-sm ${isSelected ? 'text-primary' : ''}`}>
                         {conv.customer_identifier || 'Cliente Anónimo'}
                       </span>
                       <span className="text-xs text-muted-foreground whitespace-nowrap">
                         {format(new Date(conv.created_at), "d MMM, p", { locale: es })}
                       </span>
                     </div>
-                    <div className="flex items-center gap-2 mt-2">
-                      <Badge variant="outline" className="text-[10px] py-0 h-4">
+                    <div className="flex items-center gap-2 mt-2 relative z-10">
+                      <Badge variant="outline" className={`text-[10px] py-0 h-4 ${isSelected ? 'border-primary/30 text-primary' : ''}`}>
                         {conv.channel}
                       </Badge>
                       {conv.status === 'escalated' && (
@@ -212,20 +216,20 @@ export function InboxClient({
       </div>
 
       {/* Right Panel: Chat Viewer */}
-      <div className="flex flex-col bg-background h-full overflow-hidden">
+      <div className="flex flex-col bg-background/50 h-full overflow-hidden relative z-10">
         {selectedConv ? (
           <>
             {/* Chat Header */}
-            <div className="h-16 px-6 border-b border-border/50 flex items-center justify-between">
+            <div className="h-16 px-6 border-b border-border/30 bg-background/80 backdrop-blur-xl flex items-center justify-between sticky top-0 z-20">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
-                  <User className="w-5 h-5 text-muted-foreground" />
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                  <User className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <h3 className="font-medium">{selectedConv.customer_identifier || 'Cliente Anónimo'}</h3>
+                  <h3 className="font-heading font-semibold">{selectedConv.customer_identifier || 'Cliente Anónimo'}</h3>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <span>
-                      Agente: {agents.find(a => a.id === selectedConv.agent_id)?.agent_name || 'Desconocido'}
+                      Agente: <span className="font-medium text-foreground">{agents.find(a => a.id === selectedConv.agent_id)?.agent_name || 'Desconocido'}</span>
                     </span>
                   </div>
                 </div>
@@ -271,24 +275,24 @@ export function InboxClient({
                       <div className={`max-w-[75%] ${isUser ? 'order-2' : 'order-1'}`}>
                         <div className="flex items-center gap-2 mb-1">
                           {!isUser && (
-                            <span className="text-xs font-medium flex items-center gap-1 text-muted-foreground">
-                              {isHumanAgent ? <User className="w-3 h-3"/> : <Bot className="w-3 h-3"/>}
+                            <span className="text-xs font-medium flex items-center gap-1.5 text-muted-foreground uppercase tracking-wider">
+                              {isHumanAgent ? <User className="w-3.5 h-3.5 text-primary"/> : <Bot className="w-3.5 h-3.5 text-[#00D68F]"/>}
                               {isHumanAgent ? 'Tú (Humano)' : 'Aliado AI'}
                             </span>
                           )}
                           {isUser && (
-                            <span className="text-xs font-medium text-muted-foreground ml-auto">
+                            <span className="text-xs font-medium text-muted-foreground ml-auto uppercase tracking-wider">
                               Cliente
                             </span>
                           )}
                         </div>
                         <div 
-                          className={`p-3 rounded-2xl text-sm ${
+                          className={`p-3.5 text-sm leading-relaxed ${
                             isUser 
-                              ? 'bg-foreground text-background rounded-tr-sm' 
+                              ? 'bg-muted border border-border/50 rounded-2xl rounded-tr-sm text-foreground shadow-sm' 
                               : isHumanAgent
-                                ? 'bg-blue-500 text-white rounded-tl-sm'
-                                : 'bg-muted rounded-tl-sm'
+                                ? 'bg-primary text-primary-foreground rounded-2xl rounded-tl-sm shadow-md shadow-primary/20'
+                                : 'bg-card border border-border/50 rounded-2xl rounded-tl-sm shadow-sm'
                           }`}
                         >
                           {msg.content}
@@ -322,36 +326,38 @@ export function InboxClient({
             </div>
 
             {/* Input Area */}
-            <div className="p-4 border-t border-border/50 bg-muted/10">
+            <div className="p-4 border-t border-border/30 bg-background/80 backdrop-blur-xl relative z-20">
               {isPaused ? (
                 <form onSubmit={handleSendMessage} className="flex gap-2">
                   <Input 
                     value={replyText}
                     onChange={(e) => setReplyText(e.target.value)}
                     placeholder="Escribe un mensaje al cliente..." 
-                    className="flex-1"
+                    className="flex-1 bg-card/50 border-border/50 focus-visible:ring-primary h-11 rounded-xl"
                     disabled={isSending}
                   />
-                  <Button type="submit" disabled={!replyText.trim() || isSending}>
+                  <Button type="submit" disabled={!replyText.trim() || isSending} className="h-11 px-6 rounded-xl shadow-lg shadow-primary/20 transition-all hover:scale-105 active:scale-95">
                     <Send className="w-4 h-4 mr-2" />
                     Enviar
                   </Button>
                 </form>
               ) : (
-                <div className="flex items-center justify-center gap-2 p-3 text-sm text-muted-foreground bg-muted/50 rounded-lg border border-border/50 border-dashed">
-                  <Bot className="w-4 h-4" />
-                  La IA está respondiendo automáticamente. Pausa la IA para enviar un mensaje manual.
+                <div className="flex items-center justify-center gap-3 p-4 text-sm text-primary bg-primary/5 rounded-xl border border-primary/20 border-dashed relative overflow-hidden group">
+                  <div className="absolute inset-0 bg-primary/5 group-hover:bg-primary/10 transition-colors" />
+                  <Bot className="w-5 h-5 relative z-10 animate-pulse" />
+                  <span className="relative z-10 font-medium">La IA está respondiendo automáticamente. Pausa la IA para enviar un mensaje manual.</span>
                 </div>
               )}
             </div>
           </>
         ) : (
-          <div className="flex-1 flex flex-col items-center justify-center text-muted-foreground p-8 text-center">
-            <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
-              <MessageSquare className="w-8 h-8" />
+          <div className="flex-1 flex flex-col items-center justify-center text-muted-foreground p-8 text-center relative">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent opacity-50" />
+            <div className="w-20 h-20 rounded-2xl bg-card border border-border/50 flex items-center justify-center mb-6 shadow-premium rotate-3 relative z-10">
+              <MessageSquare className="w-10 h-10 text-primary/50 -rotate-3" />
             </div>
-            <h3 className="text-lg font-medium text-foreground mb-1">Ningún chat seleccionado</h3>
-            <p className="text-sm max-w-sm">
+            <h3 className="text-2xl font-heading font-bold text-foreground mb-2 relative z-10">Ningún chat seleccionado</h3>
+            <p className="text-sm max-w-sm relative z-10">
               Selecciona una conversación de la lista de la izquierda para ver el historial y tomar el control.
             </p>
           </div>
