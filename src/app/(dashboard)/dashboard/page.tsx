@@ -1,16 +1,9 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { 
-  MessageSquare, 
-  Clock, 
-  CheckCircle2, 
-  TrendingUp,
-  Bot,
   ArrowRight,
-  Sparkles,
+  Terminal,
 } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 
 export default async function DashboardPage() {
@@ -77,7 +70,7 @@ export default async function DashboardPage() {
       .select('id, insight_summary, category, generated_at')
       .eq('company_id', company.id)
       .order('generated_at', { ascending: false })
-      .limit(3)
+      .limit(4)
     recentInsights = insights || []
   }
 
@@ -85,197 +78,124 @@ export default async function DashboardPage() {
     ? Math.round((resolvedConversations / totalConversations) * 100) 
     : 0
 
-  const firstName = profile?.full_name?.split(' ')[0] || 'usuario'
+  const firstName = profile?.full_name?.split(' ')[0]?.toUpperCase() || 'SYS_ADMIN'
 
   return (
-    <div className="space-y-8 animate-fade-in">
-      {/* Header */}
-      <div className="animate-slide-up" style={{ animationDelay: '100ms' }}>
-        <h1 className="text-3xl font-heading font-bold tracking-tight">
-          Hola, {firstName}
-        </h1>
-        <p className="text-muted-foreground mt-1">
-          Aquí está el resumen de tu negocio hoy.
+    <div className="w-full min-h-full flex flex-col font-mono">
+      {/* Header Brutalista */}
+      <div className="mb-12 border-l-4 border-primary pl-4 animate-slide-in-left">
+        <p className="text-[10px] text-muted-foreground uppercase tracking-[0.3em] mb-2 font-bold">
+          [ AUTHENTICATED_SESSION : {firstName} ]
         </p>
+        <h1 className="text-4xl md:text-6xl font-heading font-black tracking-tighter uppercase">
+          System_Status
+        </h1>
       </div>
 
-      {/* Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="shadow-premium glass hover-lift border-border/30 relative overflow-hidden group animate-slide-up" style={{ animationDelay: '200ms' }}>
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-          <CardContent className="pt-6 relative z-10">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground font-medium">Agentes activos</p>
-                <p className="text-4xl font-heading font-bold tracking-tight mt-1">{agentCount}</p>
-              </div>
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                <Bot className="w-6 h-6" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+      {/* Massive Typographic Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 border border-border shadow-brutalist bg-card mb-12">
+        {/* Metric 1: Agents */}
+        <div className="p-8 border-b md:border-b-0 md:border-r border-border relative overflow-hidden group">
+          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-4">
+            [ NODE_01 ] ACTIVE_AGENTS
+          </p>
+          <div className="text-7xl md:text-8xl font-heading font-black text-foreground group-hover:text-primary transition-colors duration-200">
+            {agentCount.toString().padStart(2, '0')}
+          </div>
+          <div className="absolute top-8 right-8 w-2 h-2 bg-primary rounded-full animate-pulse" />
+        </div>
 
-        <Card className="shadow-premium glass hover-lift border-border/30 relative overflow-hidden group animate-slide-up" style={{ animationDelay: '300ms' }}>
-          <div className="absolute inset-0 bg-gradient-to-br from-[#00D68F]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-          <CardContent className="pt-6 relative z-10">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground font-medium">Chats atendidos</p>
-                <p className="text-4xl font-heading font-bold tracking-tight mt-1">{totalConversations}</p>
-              </div>
-              <div className="w-12 h-12 rounded-xl bg-[#00D68F]/10 flex items-center justify-center text-[#00D68F] group-hover:scale-110 transition-transform">
-                <MessageSquare className="w-6 h-6" />
-              </div>
-            </div>
-            {/* Sparkline decoration */}
-            <div className="absolute bottom-0 left-0 w-full h-8 opacity-20 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMjAiPjxwYXRoIGQ9Ik0wLDIwIEwxMCwxMCBMMjAsMTUgTDMwLDUgTDQwLDEyIEw1MCwyIEw2MCw4IEw3MCwwIEw4MCw2IEw5MCwyIEwxMDAsMTAgTDEwMCwyMCBaIiBmaWxsPSIjMDBENjhGIi8+PC9zdmc+')] bg-cover bg-no-repeat bg-bottom" />
-          </CardContent>
-        </Card>
+        {/* Metric 2: Interactions */}
+        <div className="p-8 border-b lg:border-b-0 lg:border-r border-border relative overflow-hidden group">
+          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-4">
+            [ NODE_02 ] CHAT_OPERATIONS
+          </p>
+          <div className="text-7xl md:text-8xl font-heading font-black text-foreground group-hover:text-primary transition-colors duration-200">
+            {totalConversations.toString().padStart(3, '0')}
+          </div>
+          <div className="absolute bottom-8 right-8 text-primary opacity-20">
+             <Terminal className="w-16 h-16" />
+          </div>
+        </div>
 
-        <Card className="shadow-premium glass hover-lift border-border/30 relative overflow-hidden group animate-slide-up" style={{ animationDelay: '400ms' }}>
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-          <CardContent className="pt-6 relative z-10">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground font-medium">Tasa de resolución</p>
-                <p className="text-4xl font-heading font-bold tracking-tight mt-1">{resolutionRate}%</p>
-              </div>
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                <CheckCircle2 className="w-6 h-6" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-premium glass hover-lift border-border/30 relative overflow-hidden group animate-slide-up" style={{ animationDelay: '500ms' }}>
-          <div className="absolute inset-0 bg-gradient-to-br from-[#8B5CF6]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-          <CardContent className="pt-6 relative z-10">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground font-medium">Tiempo ahorrado</p>
-                <p className="text-4xl font-heading font-bold tracking-tight mt-1">
-                  {Math.round(totalConversations * 3.5)}
-                  <span className="text-base font-normal text-muted-foreground ml-1">min</span>
-                </p>
-              </div>
-              <div className="w-12 h-12 rounded-xl bg-[#8B5CF6]/10 flex items-center justify-center text-[#8B5CF6] group-hover:scale-110 transition-transform">
-                <Clock className="w-6 h-6" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Metric 3: Efficiency */}
+        <div className="p-8 border-border relative overflow-hidden group bg-primary/5">
+          <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-4">
+            [ NODE_03 ] RESOLUTION_RATE
+          </p>
+          <div className="flex items-baseline gap-2">
+            <span className="text-7xl md:text-8xl font-heading font-black text-primary">
+              {resolutionRate}
+            </span>
+            <span className="text-3xl font-heading font-bold text-primary/50">%</span>
+          </div>
+        </div>
       </div>
 
-      {/* Quick Actions & Recent Insights */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Quick Actions */}
-        <Card className="shadow-premium glass border-border/30 animate-slide-up" style={{ animationDelay: '600ms' }}>
-          <CardHeader>
-            <CardTitle className="text-lg font-heading font-semibold">Acciones rápidas</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {agentCount === 0 ? (
-              <Link href="/dashboard/agents">
-                <div className="flex items-center justify-between p-4 rounded-xl bg-card border border-border/50 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 transition-all cursor-pointer group">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-lg bg-primary text-primary-foreground flex items-center justify-center shadow-md">
-                      <Bot className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold">Crea tu primer agente</p>
-                      <p className="text-xs text-muted-foreground">
-                        Configura un agente de IA para tu negocio
-                      </p>
-                    </div>
-                  </div>
-                  <ArrowRight className="w-5 h-5 text-primary group-hover:translate-x-1 transition-transform" />
-                </div>
-              </Link>
-            ) : (
-              <>
-                <Link href="/dashboard/playground">
-                  <div className="flex items-center justify-between p-4 rounded-xl bg-card border border-border/50 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 transition-all cursor-pointer group">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
-                        <MessageSquare className="w-6 h-6" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold">Probar agente</p>
-                        <p className="text-xs text-muted-foreground">Abre el Testing Ground</p>
-                      </div>
-                    </div>
-                    <ArrowRight className="w-5 h-5 text-primary group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </Link>
-                <Link href="/dashboard/insights">
-                  <div className="flex items-center justify-between p-4 rounded-xl bg-card border border-border/50 hover:border-[#00D68F]/50 hover:shadow-lg hover:shadow-[#00D68F]/10 transition-all cursor-pointer group">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-lg bg-[#00D68F]/10 text-[#00D68F] flex items-center justify-center">
-                        <TrendingUp className="w-6 h-6" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold">Ver insights</p>
-                        <p className="text-xs text-muted-foreground">Descubre tendencias de tus clientes</p>
-                      </div>
-                    </div>
-                    <ArrowRight className="w-5 h-5 text-[#00D68F] group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </Link>
-              </>
-            )}
-          </CardContent>
-        </Card>
+      {/* Action Data Split */}
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-8 border-t border-border pt-8">
+        
+        {/* Command Matrix (Actions) */}
+        <div>
+          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-4">
+            [ EXECUTE_COMMANDS ]
+          </p>
+          <div className="flex flex-col border border-border shadow-brutalist bg-card">
+            <Link 
+              href="/dashboard/playground"
+              className="p-6 border-b border-border flex items-center justify-between hover:bg-muted group transition-none"
+            >
+              <div>
+                <p className="font-bold text-sm uppercase">INIT_TEST_ENV</p>
+                <p className="text-xs text-muted-foreground mt-1">Run simulation protocols</p>
+              </div>
+              <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary" />
+            </Link>
+            
+            <Link 
+              href="/dashboard/agents"
+              className="p-6 flex items-center justify-between hover:bg-muted group transition-none"
+            >
+              <div>
+                <p className="font-bold text-sm uppercase">DEPLOY_AGENT</p>
+                <p className="text-xs text-muted-foreground mt-1">Configure new intelligence</p>
+              </div>
+              <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary" />
+            </Link>
+          </div>
+        </div>
 
-        {/* Recent Insights */}
-        <Card className="shadow-premium glass border-border/30 animate-slide-up" style={{ animationDelay: '700ms' }}>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-lg font-heading font-semibold">Insights recientes</CardTitle>
-            {recentInsights.length > 0 && (
-              <Link href="/dashboard/insights">
-                <Button variant="ghost" size="sm" className="text-xs text-primary hover:text-primary/80">
-                  Ver todos
-                  <ArrowRight className="w-3 h-3 ml-1" />
-                </Button>
-              </Link>
-            )}
-          </CardHeader>
-          <CardContent>
+        {/* Stream Matrix (Insights) */}
+        <div>
+          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-4">
+            [ DATA_STREAM_INSIGHTS ]
+          </p>
+          <div className="border border-border bg-card shadow-brutalist">
             {recentInsights.length === 0 ? (
-              <div className="text-center py-10 relative overflow-hidden rounded-xl border border-dashed border-border/50 bg-card/30">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent -z-10" />
-                <Sparkles className="w-12 h-12 mx-auto text-primary/40 mb-4 animate-[pulse_3s_ease-in-out_infinite]" />
-                <p className="text-sm font-medium">No hay insights aún</p>
-                <p className="text-xs text-muted-foreground mt-1 max-w-[200px] mx-auto">
-                  Los insights aparecerán cuando tu agente empiece a conversar.
-                </p>
+              <div className="p-8 text-muted-foreground text-sm flex items-center gap-3">
+                <span className="animate-pulse">_</span> AWAITING_DATA_INGESTION...
               </div>
             ) : (
-              <div className="space-y-3">
-                {recentInsights.map((insight) => (
-                  <div
-                    key={insight.id}
-                    className="p-4 rounded-xl bg-card border border-border/50 hover:shadow-md transition-shadow group"
-                  >
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className={`w-2 h-2 rounded-full shadow-[0_0_8px_rgba(0,0,0,0.5)] ${
-                        insight.category === 'opportunity' ? 'bg-[#00D68F] shadow-[#00D68F]/50' :
-                        insight.category === 'complaint' ? 'bg-red-500 shadow-red-500/50' :
-                        insight.category === 'trend' ? 'bg-primary shadow-primary/50' : 'bg-gray-500'
-                      }`} />
-                      <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                        {insight.category === 'trend' ? 'Tendencia' :
-                         insight.category === 'complaint' ? 'Queja' :
-                         insight.category === 'opportunity' ? 'Oportunidad' : 'Métrica'}
+              <div className="flex flex-col">
+                {recentInsights.map((insight, i) => (
+                  <div key={insight.id} className={`p-5 flex flex-col md:flex-row md:items-center gap-4 ${i !== recentInsights.length - 1 ? 'border-b border-border' : ''} hover:bg-muted/50`}>
+                    <div className="flex items-center gap-2 md:w-32 shrink-0">
+                      <span className={`text-[10px] font-bold px-2 py-1 uppercase tracking-wider border ${
+                        insight.category === 'opportunity' ? 'text-primary border-primary bg-primary/10' :
+                        insight.category === 'complaint' ? 'text-destructive border-destructive bg-destructive/10' :
+                        'text-muted-foreground border-border'
+                      }`}>
+                        {insight.category.substring(0, 4)}
                       </span>
                     </div>
-                    <p className="text-sm font-medium group-hover:text-primary transition-colors">{insight.insight_summary}</p>
+                    <p className="text-sm font-medium">{insight.insight_summary}</p>
                   </div>
                 ))}
               </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
+
       </div>
     </div>
   )
