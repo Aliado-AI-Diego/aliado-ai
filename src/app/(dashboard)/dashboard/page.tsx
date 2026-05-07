@@ -170,22 +170,19 @@ export default async function DashboardPage() {
           </CardHeader>
           <CardContent className="space-y-3">
             {agentCount === 0 ? (
-              <Link href="/dashboard/agents">
-                <div className="flex items-center justify-between p-4 rounded-xl bg-muted/50 hover:bg-muted transition-colors cursor-pointer group">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-foreground text-background flex items-center justify-center">
-                      <Bot className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium">Crea tu primer agente</p>
-                      <p className="text-xs text-muted-foreground">
-                        Configura un agente de IA para tu negocio
-                      </p>
-                    </div>
-                  </div>
-                  <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:translate-x-1 transition-transform" />
+              <div className="flex flex-col items-center justify-center p-8 rounded-2xl border-2 border-dashed border-border/60 bg-muted/20 text-center transition-colors hover:bg-muted/40 group">
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <Bot className="w-6 h-6 text-primary" />
                 </div>
-              </Link>
+                <h3 className="text-base font-semibold text-foreground mb-1">Crea tu primer agente</h3>
+                <p className="text-sm text-muted-foreground mb-6">Empieza a automatizar la atención a tus clientes en minutos.</p>
+                <Link href="/dashboard/agents" className="w-full">
+                  <Button className="w-full shadow-apple hover:shadow-apple-hover group/btn">
+                    Comenzar ahora
+                    <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
+                  </Button>
+                </Link>
+              </div>
             ) : (
               <>
                 <Link href="/dashboard/playground">
@@ -236,10 +233,16 @@ export default async function DashboardPage() {
           </CardHeader>
           <CardContent>
             {recentInsights.length === 0 ? (
-              <div className="text-center py-8">
-                <Sparkles className="w-10 h-10 mx-auto text-muted-foreground/40 mb-3" />
-                <p className="text-sm text-muted-foreground">
-                  Los insights aparecerán cuando tu agente empiece a tener conversaciones.
+              <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
+                <div className="relative mb-4">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-blue-500/20 rounded-full blur-md opacity-50"></div>
+                  <div className="relative w-12 h-12 rounded-full bg-card border border-border/50 flex items-center justify-center shadow-sm">
+                    <Sparkles className="w-5 h-5 text-muted-foreground/70" />
+                  </div>
+                </div>
+                <h4 className="text-sm font-semibold text-foreground mb-1">Aún no hay insights</h4>
+                <p className="text-sm text-muted-foreground max-w-[250px]">
+                  La IA analizará tus conversaciones y te mostrará oportunidades y tendencias aquí.
                 </p>
               </div>
             ) : (
