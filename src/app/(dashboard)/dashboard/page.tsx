@@ -2,9 +2,15 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { 
   ArrowRight,
-  Terminal,
+  TrendingUp,
+  MessageSquare,
+  Bot,
+  Clock,
+  CheckCircle2,
+  BarChart3
 } from 'lucide-react'
 import Link from 'next/link'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -78,122 +84,189 @@ export default async function DashboardPage() {
     ? Math.round((resolvedConversations / totalConversations) * 100) 
     : 0
 
-  const firstName = profile?.full_name?.split(' ')[0]?.toUpperCase() || 'SYS_ADMIN'
+  const firstName = profile?.full_name?.split(' ')[0] || 'usuario'
 
   return (
-    <div className="w-full min-h-full flex flex-col font-mono">
-      {/* Header Brutalista */}
-      <div className="mb-12 border-l-4 border-primary pl-4 animate-slide-in-left">
-        <p className="text-[10px] text-muted-foreground uppercase tracking-[0.3em] mb-2 font-bold">
-          [ AUTHENTICATED_SESSION : {firstName} ]
-        </p>
-        <h1 className="text-4xl md:text-6xl font-heading font-black tracking-tighter uppercase">
-          System_Status
-        </h1>
-      </div>
-
-      {/* Massive Typographic Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 border border-border shadow-brutalist bg-card mb-12">
-        {/* Metric 1: Agents */}
-        <div className="p-8 border-b md:border-b-0 md:border-r border-border relative overflow-hidden group">
-          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-4">
-            [ NODE_01 ] ACTIVE_AGENTS
+    <div className="w-full max-w-6xl mx-auto space-y-8 animate-fade-in">
+      {/* Header Ejecutivo */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-border/60">
+        <div>
+          <h1 className="text-3xl font-heading font-semibold tracking-tight text-foreground">
+            Resumen Ejecutivo
+          </h1>
+          <p className="text-muted-foreground mt-1 text-sm">
+            Bienvenido, {firstName}. Aquí tienes el estado actual de tus operaciones.
           </p>
-          <div className="text-7xl md:text-8xl font-heading font-black text-foreground group-hover:text-primary transition-colors duration-200">
-            {agentCount.toString().padStart(2, '0')}
-          </div>
-          <div className="absolute top-8 right-8 w-2 h-2 bg-primary rounded-full animate-pulse" />
         </div>
-
-        {/* Metric 2: Interactions */}
-        <div className="p-8 border-b lg:border-b-0 lg:border-r border-border relative overflow-hidden group">
-          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-4">
-            [ NODE_02 ] CHAT_OPERATIONS
-          </p>
-          <div className="text-7xl md:text-8xl font-heading font-black text-foreground group-hover:text-primary transition-colors duration-200">
-            {totalConversations.toString().padStart(3, '0')}
-          </div>
-          <div className="absolute bottom-8 right-8 text-primary opacity-20">
-             <Terminal className="w-16 h-16" />
-          </div>
-        </div>
-
-        {/* Metric 3: Efficiency */}
-        <div className="p-8 border-border relative overflow-hidden group bg-primary/5">
-          <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-4">
-            [ NODE_03 ] RESOLUTION_RATE
-          </p>
-          <div className="flex items-baseline gap-2">
-            <span className="text-7xl md:text-8xl font-heading font-black text-primary">
-              {resolutionRate}
-            </span>
-            <span className="text-3xl font-heading font-bold text-primary/50">%</span>
-          </div>
+        <div className="flex items-center gap-3">
+          <Link href="/dashboard/agents">
+            <Button className="shadow-executive">Crear Agente</Button>
+          </Link>
         </div>
       </div>
 
-      {/* Action Data Split */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-8 border-t border-border pt-8">
+      {/* Tarjetas de Métricas - Clean Corporate Style */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card className="shadow-executive border-border/60 overflow-hidden">
+          <CardContent className="p-6">
+            <div className="flex justify-between items-start">
+              <div className="space-y-2">
+                <p className="text-sm font-medium text-muted-foreground">Agentes Activos</p>
+                <p className="text-4xl font-heading font-bold">{agentCount}</p>
+              </div>
+              <div className="p-2 bg-primary/10 rounded-md text-primary">
+                <Bot className="w-5 h-5" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="shadow-executive border-border/60 overflow-hidden">
+          <CardContent className="p-6">
+            <div className="flex justify-between items-start">
+              <div className="space-y-2">
+                <p className="text-sm font-medium text-muted-foreground">Chats Atendidos</p>
+                <p className="text-4xl font-heading font-bold">{totalConversations}</p>
+              </div>
+              <div className="p-2 bg-blue-500/10 rounded-md text-blue-500">
+                <MessageSquare className="w-5 h-5" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="shadow-executive border-border/60 overflow-hidden">
+          <CardContent className="p-6">
+            <div className="flex justify-between items-start">
+              <div className="space-y-2">
+                <p className="text-sm font-medium text-muted-foreground">Tasa de Resolución</p>
+                <div className="flex items-baseline gap-1">
+                  <p className="text-4xl font-heading font-bold">{resolutionRate}</p>
+                  <span className="text-xl font-semibold text-muted-foreground">%</span>
+                </div>
+              </div>
+              <div className="p-2 bg-green-500/10 rounded-md text-green-500">
+                <CheckCircle2 className="w-5 h-5" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="shadow-executive border-border/60 overflow-hidden">
+          <CardContent className="p-6">
+            <div className="flex justify-between items-start">
+              <div className="space-y-2">
+                <p className="text-sm font-medium text-muted-foreground">Horas Ahorradas</p>
+                <div className="flex items-baseline gap-1">
+                  <p className="text-4xl font-heading font-bold">
+                    {(totalConversations * 3.5 / 60).toFixed(1)}
+                  </p>
+                  <span className="text-sm font-medium text-muted-foreground">hrs</span>
+                </div>
+              </div>
+              <div className="p-2 bg-purple-500/10 rounded-md text-purple-500">
+                <Clock className="w-5 h-5" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Sección Inferior: Reportes y Accesos */}
+      <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6">
         
-        {/* Command Matrix (Actions) */}
-        <div>
-          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-4">
-            [ EXECUTE_COMMANDS ]
-          </p>
-          <div className="flex flex-col border border-border shadow-brutalist bg-card">
-            <Link 
-              href="/dashboard/playground"
-              className="p-6 border-b border-border flex items-center justify-between hover:bg-muted group transition-none"
-            >
-              <div>
-                <p className="font-bold text-sm uppercase">INIT_TEST_ENV</p>
-                <p className="text-xs text-muted-foreground mt-1">Run simulation protocols</p>
-              </div>
-              <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary" />
-            </Link>
-            
-            <Link 
-              href="/dashboard/agents"
-              className="p-6 flex items-center justify-between hover:bg-muted group transition-none"
-            >
-              <div>
-                <p className="font-bold text-sm uppercase">DEPLOY_AGENT</p>
-                <p className="text-xs text-muted-foreground mt-1">Configure new intelligence</p>
-              </div>
-              <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary" />
-            </Link>
-          </div>
-        </div>
-
-        {/* Stream Matrix (Insights) */}
-        <div>
-          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-4">
-            [ DATA_STREAM_INSIGHTS ]
-          </p>
-          <div className="border border-border bg-card shadow-brutalist">
+        {/* Insights Section */}
+        <Card className="shadow-executive border-border/60 flex flex-col">
+          <CardHeader className="border-b border-border/60 bg-muted/30 pb-4">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-base font-semibold flex items-center gap-2">
+                <BarChart3 className="w-4 h-4 text-primary" />
+                Reporte de Inteligencia
+              </CardTitle>
+              <Link href="/dashboard/insights">
+                <Button variant="ghost" size="sm" className="h-8 text-xs font-medium">Ver Reporte Completo</Button>
+              </Link>
+            </div>
+          </CardHeader>
+          <CardContent className="p-0 flex-1">
             {recentInsights.length === 0 ? (
-              <div className="p-8 text-muted-foreground text-sm flex items-center gap-3">
-                <span className="animate-pulse">_</span> AWAITING_DATA_INGESTION...
+              <div className="flex flex-col items-center justify-center h-full min-h-[200px] text-muted-foreground">
+                <TrendingUp className="w-8 h-8 mb-3 opacity-20" />
+                <p className="text-sm">No hay datos suficientes para generar el reporte.</p>
               </div>
             ) : (
-              <div className="flex flex-col">
-                {recentInsights.map((insight, i) => (
-                  <div key={insight.id} className={`p-5 flex flex-col md:flex-row md:items-center gap-4 ${i !== recentInsights.length - 1 ? 'border-b border-border' : ''} hover:bg-muted/50`}>
-                    <div className="flex items-center gap-2 md:w-32 shrink-0">
-                      <span className={`text-[10px] font-bold px-2 py-1 uppercase tracking-wider border ${
-                        insight.category === 'opportunity' ? 'text-primary border-primary bg-primary/10' :
-                        insight.category === 'complaint' ? 'text-destructive border-destructive bg-destructive/10' :
-                        'text-muted-foreground border-border'
-                      }`}>
-                        {insight.category.substring(0, 4)}
-                      </span>
+              <div className="divide-y divide-border/60">
+                {recentInsights.map((insight) => (
+                  <div key={insight.id} className="p-4 flex items-start gap-4 hover:bg-muted/30 transition-colors">
+                    <div className="mt-1">
+                      {insight.category === 'opportunity' ? (
+                        <div className="w-2 h-2 rounded-full bg-green-500 mt-1" />
+                      ) : insight.category === 'complaint' ? (
+                        <div className="w-2 h-2 rounded-full bg-red-500 mt-1" />
+                      ) : (
+                        <div className="w-2 h-2 rounded-full bg-primary mt-1" />
+                      )}
                     </div>
-                    <p className="text-sm font-medium">{insight.insight_summary}</p>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                          {insight.category === 'opportunity' ? 'Oportunidad' :
+                           insight.category === 'complaint' ? 'Alerta' : 'Tendencia'}
+                        </span>
+                        <span className="text-xs text-muted-foreground opacity-70">
+                          {new Date(insight.generated_at).toLocaleDateString()}
+                        </span>
+                      </div>
+                      <p className="text-sm font-medium leading-relaxed text-foreground/90">
+                        {insight.insight_summary}
+                      </p>
+                    </div>
                   </div>
                 ))}
               </div>
             )}
-          </div>
+          </CardContent>
+        </Card>
+
+        {/* Quick Links Section */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-1">
+            Acceso Rápido
+          </h3>
+          
+          <Link href="/dashboard/playground" className="block">
+            <Card className="shadow-sm border-border/60 hover:border-primary/50 transition-colors group">
+              <CardContent className="p-4 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-muted rounded-md group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+                    <MessageSquare className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold">Simulador de IA</p>
+                    <p className="text-xs text-muted-foreground">Prueba tus agentes</p>
+                  </div>
+                </div>
+                <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link href="/dashboard/chats" className="block">
+            <Card className="shadow-sm border-border/60 hover:border-primary/50 transition-colors group">
+              <CardContent className="p-4 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-muted rounded-md group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+                    <Bot className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold">Operaciones en Vivo</p>
+                    <p className="text-xs text-muted-foreground">Monitoriza las conversaciones</p>
+                  </div>
+                </div>
+                <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+              </CardContent>
+            </Card>
+          </Link>
         </div>
 
       </div>

@@ -12,7 +12,9 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { ThumbsUp, ThumbsDown, Send, Pause, Play, TerminalSquare, AlertTriangle } from 'lucide-react'
+import { ThumbsUp, ThumbsDown, Send, User, Bot, AlertCircle, Info, Clock, CheckCircle2 } from 'lucide-react'
+import { Card, CardContent } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 
 type Conversation = {
   id: string
@@ -61,14 +63,14 @@ export function InboxClient({
     setIsMounted(true)
   }, [])
 
-  // Autoscroll to bottom when messages change
+  // Autoscroll
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight
     }
   }, [messages])
 
-  // Fetch messages when a conversation is selected
+  // Fetch messages
   useEffect(() => {
     if (!selectedConv) return
 
@@ -142,30 +144,28 @@ export function InboxClient({
   if (!isMounted) return null
 
   return (
-    <div className="grid grid-cols-[300px_1fr] h-[calc(100vh-8rem)] w-full border border-border bg-card shadow-brutalist font-mono overflow-hidden">
+    <Card className="grid grid-cols-[300px_1fr] h-[calc(100vh-8rem)] w-full border-border/60 shadow-executive overflow-hidden bg-background">
       
       {/* Left Panel: Conversation List */}
-      <div className="border-r border-border flex flex-col bg-card h-full overflow-hidden">
-        <div className="p-4 border-b border-border bg-muted/20">
-          <h2 className="font-bold text-sm uppercase tracking-widest mb-4 flex items-center gap-2">
-            <TerminalSquare className="w-4 h-4" /> INBOX_LOG
-          </h2>
-          <div className="flex justify-between text-[10px] uppercase font-bold tracking-widest">
+      <div className="border-r border-border/60 flex flex-col bg-muted/30 h-full overflow-hidden">
+        <div className="p-4 border-b border-border/60 bg-background">
+          <h2 className="font-semibold text-sm mb-3">Hilos de Conversación</h2>
+          <div className="flex gap-4">
             <div className="flex flex-col">
-              <span className="text-muted-foreground">ACTIVE_THREADS</span>
-              <span className="text-primary text-sm">{conversations.filter(c => c.status === 'active').length}</span>
+              <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Activos</span>
+              <span className="font-semibold text-primary">{conversations.filter(c => c.status === 'active').length}</span>
             </div>
-            <div className="flex flex-col text-right">
-              <span className="text-muted-foreground">HALTED_THREADS</span>
-              <span className="text-destructive text-sm">{conversations.filter(c => c.status === 'escalated').length}</span>
+            <div className="flex flex-col">
+              <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Requieren Atención</span>
+              <span className="font-semibold text-orange-500">{conversations.filter(c => c.status === 'escalated').length}</span>
             </div>
           </div>
         </div>
 
         <ScrollArea className="flex-1">
           {conversations.length === 0 ? (
-            <div className="p-6 text-center text-xs text-muted-foreground uppercase">
-              NO_LOGS_AVAILABLE
+            <div className="p-6 text-center text-sm text-muted-foreground">
+              No hay conversaciones disponibles.
             </div>
           ) : (
             <div className="flex flex-col">
@@ -175,32 +175,32 @@ export function InboxClient({
                   <button
                     key={conv.id}
                     onClick={() => setSelectedConv(conv)}
-                    className={`w-full text-left p-4 border-b border-border transition-none uppercase
+                    className={`w-full text-left p-4 border-b border-border/40 transition-colors
                       ${isSelected 
-                        ? 'bg-primary text-primary-foreground font-bold' 
-                        : 'hover:bg-muted text-muted-foreground hover:text-foreground'
+                        ? 'bg-background shadow-[inset_3px_0_0_0_var(--color-primary)]' 
+                        : 'hover:bg-background/50 text-muted-foreground hover:text-foreground'
                       }
                     `}
                   >
-                    <div className="flex justify-between items-start mb-2">
-                      <span className="truncate pr-2 text-xs tracking-wider">
-                        {conv.customer_identifier || 'ANON_USER'}
+                    <div className="flex justify-between items-start mb-1.5">
+                      <span className={`text-sm font-medium truncate pr-2 ${isSelected ? 'text-foreground' : ''}`}>
+                        {conv.customer_identifier || 'Cliente Anónimo'}
                       </span>
-                      <span className="text-[9px] whitespace-nowrap opacity-70">
-                        {format(new Date(conv.created_at), "HH:mm:ss")}
+                      <span className="text-[10px] whitespace-nowrap opacity-70">
+                        {format(new Date(conv.created_at), "HH:mm")}
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className={`text-[9px] px-1 py-0.5 border ${isSelected ? 'border-primary-foreground' : 'border-border'}`}>
+                      <Badge variant="outline" className="text-[10px] font-normal h-4 py-0 px-1.5">
                         {conv.channel}
-                      </span>
+                      </Badge>
                       {conv.status === 'escalated' && (
-                        <span className="text-[9px] px-1 py-0.5 bg-destructive text-destructive-foreground font-bold">
-                          HALTED
-                        </span>
+                        <Badge variant="secondary" className="text-[10px] font-medium h-4 py-0 px-1.5 bg-orange-500/10 text-orange-600 border-orange-200">
+                          Atención
+                        </Badge>
                       )}
                       {conv.is_test && (
-                        <span className="text-[9px] px-1 py-0.5 border border-dashed">TEST</span>
+                        <Badge variant="secondary" className="text-[10px] font-normal h-4 py-0 px-1.5">Test</Badge>
                       )}
                     </div>
                   </button>
@@ -211,133 +211,150 @@ export function InboxClient({
         </ScrollArea>
       </div>
 
-      {/* Right Panel: Chat Viewer */}
-      <div className="flex flex-col bg-background h-full overflow-hidden relative">
+      {/* Right Panel: Chat Viewer (Threaded Document) */}
+      <div className="flex flex-col h-full overflow-hidden bg-background">
         {selectedConv ? (
           <>
-            {/* Chat Header */}
-            <div className="h-14 px-6 border-b border-border flex items-center justify-between bg-card shrink-0">
-              <div className="flex items-center gap-3 text-xs uppercase tracking-widest font-bold">
-                <span className="text-primary">TARGET:</span> 
-                <span>{selectedConv.customer_identifier || 'ANON_USER'}</span>
-                <span className="text-muted-foreground mx-2">|</span>
-                <span className="text-muted-foreground">AGENT:</span>
-                <span>{agents.find(a => a.id === selectedConv.agent_id)?.agent_name || 'UNKNOWN'}</span>
+            {/* Thread Header */}
+            <div className="h-16 px-6 border-b border-border/60 flex items-center justify-between bg-card shrink-0 shadow-sm z-10">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center border border-border/60">
+                  <User className="w-5 h-5 text-muted-foreground" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-sm">{selectedConv.customer_identifier || 'Cliente Anónimo'}</h3>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <span className="flex items-center gap-1">
+                      <Bot className="w-3 h-3" /> Agente asignado: <span className="font-medium text-foreground">{agents.find(a => a.id === selectedConv.agent_id)?.agent_name || 'Desconocido'}</span>
+                    </span>
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
+                {isPaused ? (
+                  <Badge variant="secondary" className="bg-orange-500/10 text-orange-600 border-orange-200 font-medium px-2 py-1">
+                    <AlertCircle className="w-3.5 h-3.5 mr-1" /> Control Humano Activo
+                  </Badge>
+                ) : (
+                  <Badge variant="secondary" className="bg-green-500/10 text-green-600 border-green-200 font-medium px-2 py-1">
+                    <CheckCircle2 className="w-3.5 h-3.5 mr-1" /> IA Operando
+                  </Badge>
+                )}
                 <Button 
                   variant="outline"
                   size="sm"
                   onClick={handleTogglePause}
                   disabled={statusUpdating}
-                  className={`uppercase tracking-widest text-[10px] font-bold h-8 rounded-none border-2 transition-none
-                    ${isPaused 
-                      ? "border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground" 
-                      : "border-primary text-primary hover:bg-primary hover:text-primary-foreground"}
-                  `}
+                  className="shadow-sm"
                 >
-                  {isPaused ? <Play className="w-3 h-3 mr-2" /> : <Pause className="w-3 h-3 mr-2" />}
-                  {isPaused ? "RESUME_AUTO" : "HALT_SYSTEM"}
+                  {isPaused ? "Reanudar IA" : "Asumir Control Manual"}
                 </Button>
               </div>
             </div>
 
-            {/* Chat Messages (Terminal Log Style) */}
+            {/* Document Messages */}
             <div 
               ref={scrollRef}
-              className="flex-1 overflow-y-auto p-6 space-y-2 bg-grid-matrix text-xs"
+              className="flex-1 overflow-y-auto bg-muted/10 p-6"
             >
-              {isLoadingMessages ? (
-                <div className="flex justify-center items-center h-full text-primary uppercase animate-pulse">
-                  &gt; Fetching_logs...
-                </div>
-              ) : messages.length === 0 ? (
-                <div className="flex justify-center items-center h-full text-muted-foreground uppercase">
-                  &gt; No_data_found_in_buffer
-                </div>
-              ) : (
-                messages.map((msg, idx) => {
-                  if (msg.role === 'system') return null;
-                  const isUser = msg.role === 'user';
-                  const isHumanAgent = msg.metadata?.is_human === true;
-                  
-                  return (
-                    <div key={msg.id || idx} className="flex flex-col mb-4 group font-mono">
-                      <div className="flex items-center gap-2 mb-1 opacity-70">
-                        <span className="text-[10px]">[{format(new Date(msg.created_at), "HH:mm:ss")}]</span>
-                        <span className={`text-[10px] font-bold ${
-                          isUser ? 'text-muted-foreground' : isHumanAgent ? 'text-blue-500' : 'text-primary'
-                        }`}>
-                          &lt;{isUser ? 'USER' : isHumanAgent ? 'SYS_ADMIN' : 'AI_NODE'}&gt;
-                        </span>
-                      </div>
-                      <div className={`pl-4 py-1 border-l-2 ${
-                        isUser ? 'border-muted-foreground text-foreground' : 
-                        isHumanAgent ? 'border-blue-500 text-blue-500' : 
-                        'border-primary text-primary'
-                      }`}>
-                        {msg.content}
-                      </div>
-                      
-                      {/* Feedback UI for AI logs */}
-                      {!isUser && !isHumanAgent && (
-                        <div className="flex items-center gap-2 mt-1 pl-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button 
-                            onClick={() => handleFeedback(msg.id, 'up')}
-                            className={`p-0.5 hover:bg-muted ${msg.metadata?.feedback === 'up' ? 'text-green-500' : 'text-muted-foreground'}`}
-                          >
-                            <ThumbsUp className="w-3 h-3" />
-                          </button>
-                          <button 
-                            onClick={() => handleFeedback(msg.id, 'down')}
-                            className={`p-0.5 hover:bg-muted ${msg.metadata?.feedback === 'down' ? 'text-destructive' : 'text-muted-foreground'}`}
-                          >
-                            <ThumbsDown className="w-3 h-3" />
-                          </button>
+              <div className="max-w-3xl mx-auto space-y-6">
+                {isLoadingMessages ? (
+                  <div className="flex justify-center py-8">
+                    <div className="animate-spin w-5 h-5 border-2 border-primary border-t-transparent rounded-full" />
+                  </div>
+                ) : messages.length === 0 ? (
+                  <div className="text-center py-12 text-muted-foreground text-sm">
+                    No hay mensajes en este hilo.
+                  </div>
+                ) : (
+                  messages.map((msg, idx) => {
+                    if (msg.role === 'system') return null;
+                    const isUser = msg.role === 'user';
+                    const isHumanAgent = msg.metadata?.is_human === true;
+                    
+                    return (
+                      <div key={msg.id || idx} className="bg-card border border-border/60 rounded-md shadow-sm overflow-hidden">
+                        {/* Header del Mensaje */}
+                        <div className={`px-4 py-2 border-b border-border/40 flex items-center justify-between text-xs
+                          ${isUser ? 'bg-muted/30' : 'bg-primary/5'}
+                        `}>
+                          <div className="flex items-center gap-2 font-medium">
+                            {isUser ? (
+                              <><User className="w-3.5 h-3.5 text-muted-foreground" /> Cliente</>
+                            ) : isHumanAgent ? (
+                              <><User className="w-3.5 h-3.5 text-blue-500" /> Soporte (Tú)</>
+                            ) : (
+                              <><Bot className="w-3.5 h-3.5 text-primary" /> Aliado AI</>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-3 text-muted-foreground">
+                            <span className="flex items-center gap-1">
+                              <Clock className="w-3 h-3" /> {format(new Date(msg.created_at), "HH:mm")}
+                            </span>
+                            {!isUser && !isHumanAgent && (
+                              <div className="flex items-center gap-1 border-l border-border/60 pl-3">
+                                <button onClick={() => handleFeedback(msg.id, 'up')} className={`hover:text-green-500 ${msg.metadata?.feedback === 'up' ? 'text-green-500' : ''}`}>
+                                  <ThumbsUp className="w-3 h-3" />
+                                </button>
+                                <button onClick={() => handleFeedback(msg.id, 'down')} className={`hover:text-red-500 ${msg.metadata?.feedback === 'down' ? 'text-red-500' : ''}`}>
+                                  <ThumbsDown className="w-3 h-3" />
+                                </button>
+                              </div>
+                            )}
+                          </div>
                         </div>
-                      )}
-                    </div>
-                  )
-                })
-              )}
+                        {/* Contenido del Mensaje */}
+                        <div className="p-4 text-sm leading-relaxed text-foreground/90 whitespace-pre-wrap">
+                          {msg.content}
+                        </div>
+                      </div>
+                    )
+                  })
+                )}
+              </div>
             </div>
 
             {/* Input Area */}
-            <div className={`p-4 border-t-2 ${isPaused ? 'border-destructive bg-destructive/5' : 'border-border bg-card'}`}>
+            <div className="p-4 border-t border-border/60 bg-card z-10 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.02)]">
               {isPaused ? (
-                <form onSubmit={handleSendMessage} className="flex gap-2">
-                  <div className="flex-1 relative flex items-center">
-                    <span className="absolute left-3 text-destructive font-bold">&gt;</span>
+                <form onSubmit={handleSendMessage} className="max-w-3xl mx-auto flex flex-col gap-3">
+                  <div className="text-xs font-medium text-orange-600 flex items-center gap-1">
+                    <AlertCircle className="w-3.5 h-3.5" /> Modo de respuesta manual activado. El cliente está esperando tu respuesta.
+                  </div>
+                  <div className="flex gap-3">
                     <Input 
                       value={replyText}
                       onChange={(e) => setReplyText(e.target.value)}
-                      placeholder="MANUAL_OVERRIDE_INPUT..." 
-                      className="w-full pl-8 rounded-none border-destructive focus-visible:ring-0 focus-visible:border-destructive bg-background font-mono text-xs uppercase"
+                      placeholder="Escribe tu respuesta oficial aquí..." 
+                      className="flex-1 shadow-sm border-border/60"
                       disabled={isSending}
                     />
+                    <Button type="submit" disabled={!replyText.trim() || isSending} className="shadow-sm">
+                      <Send className="w-4 h-4 mr-2" />
+                      Enviar Respuesta
+                    </Button>
                   </div>
-                  <Button type="submit" disabled={!replyText.trim() || isSending} className="rounded-none font-bold uppercase tracking-widest bg-destructive hover:bg-destructive/90 text-destructive-foreground">
-                    EXECUTE
-                  </Button>
                 </form>
               ) : (
-                <div className="flex items-center justify-center gap-3 p-3 text-xs text-primary border border-primary/30 bg-primary/5 font-bold uppercase tracking-widest">
-                  <span className="animate-pulse">_</span>
-                  AI_NODE_IS_HANDLING_STREAM. HALT_SYSTEM_TO_INTERVENE.
+                <div className="max-w-3xl mx-auto flex items-center justify-center gap-2 p-3 text-sm text-muted-foreground bg-muted/30 border border-border/60 rounded-md">
+                  <Info className="w-4 h-4" />
+                  La Inteligencia Artificial está gestionando este hilo. Asume el control manual si necesitas intervenir.
                 </div>
               )}
             </div>
           </>
         ) : (
-          <div className="flex-1 flex flex-col items-center justify-center text-muted-foreground p-8 text-center bg-grid-matrix font-mono uppercase tracking-widest">
-            <AlertTriangle className="w-12 h-12 mb-4 opacity-50" />
-            <h3 className="text-xl font-bold text-foreground mb-2">NO_TARGET_SELECTED</h3>
-            <p className="text-xs">
-              &gt; Please_select_a_thread_from_the_left_panel_to_inspect_logs
+          <div className="flex-1 flex flex-col items-center justify-center text-muted-foreground p-8 text-center bg-muted/10">
+            <div className="w-16 h-16 rounded-full bg-card border border-border/60 flex items-center justify-center mb-4 shadow-sm">
+              <Info className="w-8 h-8 text-muted-foreground/50" />
+            </div>
+            <h3 className="text-lg font-semibold text-foreground mb-1">Ningún hilo seleccionado</h3>
+            <p className="text-sm max-w-[300px]">
+              Selecciona una conversación del panel izquierdo para ver el historial o intervenir.
             </p>
           </div>
         )}
       </div>
-    </div>
+    </Card>
   )
 }
