@@ -57,6 +57,11 @@ export function InboxClient({
   const [isSending, setIsSending] = useState(false)
   const [statusUpdating, setStatusUpdating] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   // Autoscroll to bottom when messages change
   useEffect(() => {
@@ -138,11 +143,13 @@ export function InboxClient({
 
   const isPaused = selectedConv?.status === 'escalated'
 
+  if (!isMounted) return null // Previene errores de hidratación
+
   return (
-    <Card className="flex h-full w-full border-border/50 overflow-hidden shadow-apple-sm">
+    <Card className="grid grid-cols-[300px_1fr] h-full w-full border-border/50 overflow-hidden shadow-apple-sm">
       
       {/* Left Panel: Conversation List */}
-      <div className="w-1/3 min-w-[300px] border-r border-border/50 flex flex-col bg-muted/20">
+      <div className="border-r border-border/50 flex flex-col bg-muted/20 h-full overflow-hidden">
         <div className="p-4 border-b border-border/50">
           <h2 className="font-semibold text-lg">Bandeja de Entrada</h2>
           <div className="flex gap-4 mt-4">
@@ -205,7 +212,7 @@ export function InboxClient({
       </div>
 
       {/* Right Panel: Chat Viewer */}
-      <div className="flex-1 flex flex-col bg-background">
+      <div className="flex flex-col bg-background h-full overflow-hidden">
         {selectedConv ? (
           <>
             {/* Chat Header */}
