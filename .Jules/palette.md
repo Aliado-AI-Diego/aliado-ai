@@ -1,0 +1,3 @@
+## 2024-06-25 - [Accessible Accordions & Icon-only Buttons]
+**Learning:** React 18's `useId` hook is a perfect match for associating `aria-controls` and `aria-labelledby` attributes for interactive components like accordions without manually tracking unique strings across the page. Also, while `sr-only` text is critical for screen readers on icon-only buttons, sighted users need equivalent feedback using tooltips to avoid confusion.
+**Action:** Always ensure custom accordions link their buttons and region content with `aria-controls`/`aria-labelledby`, specify `role="region"` for the content, and use `aria-hidden="true"` on decorative icons. For icon-only buttons, wrap them in a `Tooltip` component to serve both sighted and non-sighted users effectively.
