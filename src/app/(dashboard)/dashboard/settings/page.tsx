@@ -111,7 +111,7 @@ export default function SettingsPage() {
         }
         
         const data = await res.json()
-        if (data.url) window.location.href = data.url
+        if (data.url) window.location.assign(data.url)
       } else {
         // Create portal session
         const res = await fetch('/api/stripe/portal', {
@@ -120,7 +120,7 @@ export default function SettingsPage() {
           body: JSON.stringify({ companyId: company.id })
         })
         const data = await res.json()
-        if (data.url) window.location.href = data.url
+        if (data.url) window.location.assign(data.url)
       }
     } catch (e) {
       console.error(e)
