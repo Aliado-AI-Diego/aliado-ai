@@ -1,15 +1,8 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-import { sendWhatsAppMessage } from '@/lib/meta/client'
+import { verifyMetaSignature, getBusinessPhoneNumberId, processMetaEvent } from '@/lib/meta/client'
 import { generateChatResponse } from '@/lib/ai/gemini'
 import { searchKnowledge } from '@/lib/ai/rag'
-
-// Initialize a Supabase client with the Service Role key since this is a server-to-server webhook
-// and we need to bypass RLS to read agent configurations based on incoming phone numbers.
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+import { supabaseAdmin } from '@/lib/supabase/admin'
 
 /**
  * GET Handler: Webhook Verification

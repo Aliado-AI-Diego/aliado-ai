@@ -1,13 +1,7 @@
 import { NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe/server'
-import { createClient } from '@supabase/supabase-js'
 import { getPlanIdByStripePriceId } from '@/config/pricing'
-
-// Need service role to update DB from webhook
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+import { supabaseAdmin } from '@/lib/supabase/admin'
 
 export async function POST(request: Request) {
   const body = await request.text()

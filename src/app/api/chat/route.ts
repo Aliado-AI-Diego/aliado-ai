@@ -1,13 +1,8 @@
-import { NextRequest } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { generateChatResponseStream } from '@/lib/ai/gemini'
 import { searchKnowledge } from '@/lib/ai/rag'
-import { createClient as createServiceClient } from '@supabase/supabase-js'
-
-const serviceSupabase = createServiceClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+import { supabaseAdmin as serviceSupabase } from '@/lib/supabase/admin'
 
 export async function POST(request: NextRequest) {
   try {
