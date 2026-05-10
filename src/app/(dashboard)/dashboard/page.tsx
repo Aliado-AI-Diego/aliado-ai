@@ -87,138 +87,138 @@ export default async function DashboardPage() {
 
   const firstName = profile?.full_name?.split(' ')[0] || 'usuario'
 
+  const metrics = [
+    {
+      label: 'Agentes Activos',
+      value: agentCount,
+      suffix: '',
+      icon: Bot,
+      accentClass: 'accent-strip',
+    },
+    {
+      label: 'Chats Atendidos',
+      value: totalConversations,
+      suffix: '',
+      icon: MessageSquare,
+      accentClass: 'accent-strip',
+    },
+    {
+      label: 'Tasa de Resolución',
+      value: resolutionRate,
+      suffix: '%',
+      icon: CheckCircle2,
+      accentClass: 'accent-strip-success',
+    },
+    {
+      label: 'Horas Ahorradas',
+      value: (totalConversations * 3.5 / 60).toFixed(1),
+      suffix: 'hrs',
+      icon: Clock,
+      accentClass: 'accent-strip-warning',
+    },
+  ]
+
   return (
-    <div className="w-full max-w-6xl mx-auto space-y-8 animate-fade-in">
-      {/* Header Ejecutivo */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-border/60">
+    <div className="w-full max-w-6xl mx-auto space-y-6 animate-fade-in">
+      
+      {/* Header — Compact, authoritative */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 pb-5 border-b border-border">
         <div>
-          <h1 className="text-3xl font-heading font-semibold tracking-tight text-foreground">
-            Resumen Ejecutivo
-          </h1>
-          <p className="text-muted-foreground mt-1 text-sm">
-            Bienvenido, {firstName}. Aquí tienes el estado actual de tus operaciones.
+          <p className="text-[13px] font-medium text-muted-foreground mb-0.5">
+            Bienvenido, {firstName}
           </p>
+          <h1 className="text-2xl font-heading font-bold tracking-tight text-foreground">
+            Panel de Control
+          </h1>
         </div>
-        <div className="flex items-center gap-3">
-          <Link href="/dashboard/agents">
-            <Button className="shadow-executive">Crear Agente</Button>
-          </Link>
-        </div>
+        <Link href="/dashboard/agents">
+          <Button size="sm" className="shadow-command h-8 text-[13px] font-medium">
+            Crear Agente
+          </Button>
+        </Link>
       </div>
 
-      {/* Tarjetas de Métricas - Clean Corporate Style */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="shadow-executive border-border/60 overflow-hidden">
-          <CardContent className="p-6">
-            <div className="flex justify-between items-start">
-              <div className="space-y-2">
-                <p className="text-sm font-medium text-muted-foreground">Agentes Activos</p>
-                <p className="text-4xl font-heading font-bold">{agentCount}</p>
-              </div>
-              <div className="p-2 bg-primary/10 rounded-md text-primary">
-                <Bot className="w-5 h-5" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-executive border-border/60 overflow-hidden">
-          <CardContent className="p-6">
-            <div className="flex justify-between items-start">
-              <div className="space-y-2">
-                <p className="text-sm font-medium text-muted-foreground">Chats Atendidos</p>
-                <p className="text-4xl font-heading font-bold">{totalConversations}</p>
-              </div>
-              <div className="p-2 bg-blue-500/10 rounded-md text-blue-500">
-                <MessageSquare className="w-5 h-5" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-executive border-border/60 overflow-hidden">
-          <CardContent className="p-6">
-            <div className="flex justify-between items-start">
-              <div className="space-y-2">
-                <p className="text-sm font-medium text-muted-foreground">Tasa de Resolución</p>
-                <div className="flex items-baseline gap-1">
-                  <p className="text-4xl font-heading font-bold">{resolutionRate}</p>
-                  <span className="text-xl font-semibold text-muted-foreground">%</span>
+      {/* Metric Cards — Razor Command style with accent strips */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 stagger-children">
+        {metrics.map((metric) => {
+          const Icon = metric.icon
+          return (
+            <Card key={metric.label} className={`shadow-command border-border overflow-hidden ${metric.accentClass}`}>
+              <CardContent className="p-4">
+                <div className="flex justify-between items-start">
+                  <div className="space-y-1">
+                    <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+                      {metric.label}
+                    </p>
+                    <div className="flex items-baseline gap-1">
+                      <p className="text-3xl font-heading font-bold tabular-nums">
+                        {metric.value}
+                      </p>
+                      {metric.suffix && (
+                        <span className="text-sm font-medium text-muted-foreground">
+                          {metric.suffix}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="p-1.5 bg-muted text-muted-foreground">
+                    <Icon className="w-4 h-4" />
+                  </div>
                 </div>
-              </div>
-              <div className="p-2 bg-green-500/10 rounded-md text-green-500">
-                <CheckCircle2 className="w-5 h-5" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-executive border-border/60 overflow-hidden">
-          <CardContent className="p-6">
-            <div className="flex justify-between items-start">
-              <div className="space-y-2">
-                <p className="text-sm font-medium text-muted-foreground">Horas Ahorradas</p>
-                <div className="flex items-baseline gap-1">
-                  <p className="text-4xl font-heading font-bold">
-                    {(totalConversations * 3.5 / 60).toFixed(1)}
-                  </p>
-                  <span className="text-sm font-medium text-muted-foreground">hrs</span>
-                </div>
-              </div>
-              <div className="p-2 bg-purple-500/10 rounded-md text-purple-500">
-                <Clock className="w-5 h-5" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+              </CardContent>
+            </Card>
+          )
+        })}
       </div>
 
-      {/* Sección Inferior: Reportes y Accesos */}
-      <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6">
+      {/* Lower Section: Reports + Quick Links */}
+      <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-4">
         
         {/* Insights Section */}
-        <Card className="shadow-executive border-border/60 flex flex-col">
-          <CardHeader className="border-b border-border/60 bg-muted/30 pb-4">
+        <Card className="shadow-command border-border flex flex-col">
+          <CardHeader className="border-b border-border bg-muted/40 py-3 px-4">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-base font-semibold flex items-center gap-2">
-                <BarChart3 className="w-4 h-4 text-primary" />
-                Reporte de Inteligencia
+              <CardTitle className="text-[13px] font-semibold flex items-center gap-2 uppercase tracking-wider text-muted-foreground">
+                <BarChart3 className="w-3.5 h-3.5 text-primary" />
+                Inteligencia
               </CardTitle>
               <Link href="/dashboard/insights">
-                <Button variant="ghost" size="sm" className="h-8 text-xs font-medium">Ver Reporte Completo</Button>
+                <Button variant="ghost" size="sm" className="h-7 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground hover:text-foreground">
+                  Ver Todo
+                </Button>
               </Link>
             </div>
           </CardHeader>
           <CardContent className="p-0 flex-1">
             {recentInsights.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-full min-h-[200px] text-muted-foreground">
-                <TrendingUp className="w-8 h-8 mb-3 opacity-20" />
-                <p className="text-sm">No hay datos suficientes para generar el reporte.</p>
+              <div className="flex flex-col items-center justify-center h-full min-h-[180px] text-muted-foreground">
+                <TrendingUp className="w-6 h-6 mb-2 opacity-20" />
+                <p className="text-[13px]">Sin datos para generar el reporte.</p>
               </div>
             ) : (
-              <div className="divide-y divide-border/60">
+              <div className="divide-y divide-border">
                 {recentInsights.map((insight) => (
-                  <div key={insight.id} className="p-4 flex items-start gap-4 hover:bg-muted/30 transition-colors">
-                    <div className="mt-1">
+                  <div key={insight.id} className="px-4 py-3 flex items-start gap-3 hover:bg-muted/30 transition-colors">
+                    <div className="mt-1.5 shrink-0">
                       {insight.category === 'opportunity' ? (
-                        <div className="w-2 h-2 rounded-full bg-green-500 mt-1" />
+                        <div className="w-2 h-2 bg-emerald-500" />
                       ) : insight.category === 'complaint' ? (
-                        <div className="w-2 h-2 rounded-full bg-red-500 mt-1" />
+                        <div className="w-2 h-2 bg-red-500" />
                       ) : (
-                        <div className="w-2 h-2 rounded-full bg-primary mt-1" />
+                        <div className="w-2 h-2 bg-primary" />
                       )}
                     </div>
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between mb-0.5">
+                        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
                           {insight.category === 'opportunity' ? 'Oportunidad' :
                            insight.category === 'complaint' ? 'Alerta' : 'Tendencia'}
                         </span>
-                        <span className="text-xs text-muted-foreground opacity-70">
+                        <span className="text-[10px] text-muted-foreground/60 tabular-nums">
                           {new Date(insight.generated_at).toLocaleDateString()}
                         </span>
                       </div>
-                      <p className="text-sm font-medium leading-relaxed text-foreground/90">
+                      <p className="text-[13px] font-medium leading-snug text-foreground/90">
                         {insight.insight_summary}
                       </p>
                     </div>
@@ -229,47 +229,46 @@ export default async function DashboardPage() {
           </CardContent>
         </Card>
 
-        {/* Quick Links Section */}
-        <div className="space-y-4">
-          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-1">
+        {/* Quick Links */}
+        <div className="space-y-3">
+          <h3 className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest px-0.5 mb-1">
             Acceso Rápido
           </h3>
           
-          <Link href="/dashboard/playground" className="block">
-            <Card className="shadow-sm border-border/60 hover:border-primary/50 transition-colors group">
-              <CardContent className="p-4 flex items-center justify-between">
+          <Link href="/dashboard/playground" className="block group">
+            <Card className="shadow-command border-border hover:border-primary/50 transition-all hover-command">
+              <CardContent className="p-3.5 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-muted rounded-md group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+                  <div className="p-1.5 bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary transition-colors">
                     <MessageSquare className="w-4 h-4" />
                   </div>
                   <div>
-                    <p className="text-sm font-semibold">Simulador de IA</p>
-                    <p className="text-xs text-muted-foreground">Prueba tus agentes</p>
+                    <p className="text-[13px] font-semibold">Simulador</p>
+                    <p className="text-[11px] text-muted-foreground">Prueba tus agentes</p>
                   </div>
                 </div>
-                <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                <ArrowRight className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
               </CardContent>
             </Card>
           </Link>
 
-          <Link href="/dashboard/chats" className="block">
-            <Card className="shadow-sm border-border/60 hover:border-primary/50 transition-colors group">
-              <CardContent className="p-4 flex items-center justify-between">
+          <Link href="/dashboard/chats" className="block group">
+            <Card className="shadow-command border-border hover:border-primary/50 transition-all hover-command">
+              <CardContent className="p-3.5 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-muted rounded-md group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+                  <div className="p-1.5 bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary transition-colors">
                     <Bot className="w-4 h-4" />
                   </div>
                   <div>
-                    <p className="text-sm font-semibold">Operaciones en Vivo</p>
-                    <p className="text-xs text-muted-foreground">Monitoriza las conversaciones</p>
+                    <p className="text-[13px] font-semibold">Operaciones</p>
+                    <p className="text-[11px] text-muted-foreground">Monitoriza conversaciones</p>
                   </div>
                 </div>
-                <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                <ArrowRight className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
               </CardContent>
             </Card>
           </Link>
         </div>
-
       </div>
     </div>
   )

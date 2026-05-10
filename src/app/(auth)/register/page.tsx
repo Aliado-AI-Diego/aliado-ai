@@ -94,17 +94,17 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="w-full max-w-sm">
-      <div className="text-center mb-8">
-        <h1 className="text-2xl font-bold tracking-tight mb-2">Crea tu cuenta</h1>
-        <p className="text-sm text-muted-foreground">
+    <div className="w-full max-w-sm animate-fade-in">
+      <div className="text-center mb-6">
+        <h1 className="text-xl font-heading font-bold tracking-tight mb-1">Crea tu cuenta</h1>
+        <p className="text-[13px] text-muted-foreground">
           Configura tu agente de IA en minutos.
         </p>
       </div>
 
-      <form onSubmit={handleRegister} className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="fullName" className="text-sm font-medium">
+      <form onSubmit={handleRegister} className="space-y-3">
+        <div className="space-y-1.5">
+          <Label htmlFor="fullName" className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
             Nombre completo
           </Label>
           <Input
@@ -114,12 +114,12 @@ export default function RegisterPage() {
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
             required
-            className="h-11 rounded-xl"
+            className="h-10 text-[13px]"
           />
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="companyName" className="text-sm font-medium">
+        <div className="space-y-1.5">
+          <Label htmlFor="companyName" className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
             Nombre de tu empresa
           </Label>
           <Input
@@ -129,12 +129,12 @@ export default function RegisterPage() {
             value={companyName}
             onChange={(e) => setCompanyName(e.target.value)}
             required
-            className="h-11 rounded-xl"
+            className="h-10 text-[13px]"
           />
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="email" className="text-sm font-medium">
+        <div className="space-y-1.5">
+          <Label htmlFor="email" className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
             Correo electrónico
           </Label>
           <Input
@@ -144,12 +144,12 @@ export default function RegisterPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="h-11 rounded-xl"
+            className="h-10 text-[13px]"
           />
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="password" className="text-sm font-medium">
+        <div className="space-y-1.5">
+          <Label htmlFor="password" className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
             Contraseña
           </Label>
           <Input
@@ -160,17 +160,17 @@ export default function RegisterPage() {
             onChange={(e) => setPassword(e.target.value)}
             required
             minLength={6}
-            className="h-11 rounded-xl"
+            className="h-10 text-[13px]"
           />
         </div>
 
         {error && (
-          <p className="text-sm text-destructive text-center">{error}</p>
+          <p className="text-[12px] text-destructive text-center font-medium">{error}</p>
         )}
 
         <Button
           type="submit"
-          className="w-full h-11 rounded-xl font-medium"
+          className="w-full h-10 font-semibold text-[13px]"
           disabled={loading}
         >
           {loading ? (
@@ -178,15 +178,15 @@ export default function RegisterPage() {
           ) : (
             <>
               Crear cuenta
-              <ArrowRight className="w-4 h-4 ml-2" />
+              <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
             </>
           )}
         </Button>
       </form>
 
-      <p className="text-center text-sm text-muted-foreground mt-6">
+      <p className="text-center text-[12px] text-muted-foreground mt-5">
         ¿Ya tienes cuenta?{' '}
-        <Link href="/login" className="text-foreground font-medium hover:underline">
+        <Link href="/login" className="text-foreground font-semibold hover:text-primary transition-colors">
           Iniciar sesión
         </Link>
       </p>

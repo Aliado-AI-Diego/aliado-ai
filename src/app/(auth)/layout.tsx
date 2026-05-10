@@ -1,4 +1,4 @@
-import { Bot } from 'lucide-react'
+import { Cpu } from 'lucide-react'
 import Link from 'next/link'
 import { ThemeToggle } from '@/components/theme-toggle'
 
@@ -9,18 +9,24 @@ export default function AuthLayout({
 }) {
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <nav className="px-6 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-foreground flex items-center justify-center">
-            <Bot className="w-5 h-5 text-background" />
+      {/* Auth Navigation */}
+      <nav className="px-4 lg:px-6 h-14 flex items-center justify-between border-b border-border">
+        <Link href="/" className="flex items-center gap-2.5">
+          <div className="w-7 h-7 bg-foreground flex items-center justify-center">
+            <Cpu className="w-3.5 h-3.5 text-background" />
           </div>
-          <span className="font-semibold text-lg tracking-tight">Aliado AI</span>
+          <span className="font-heading font-bold text-sm tracking-tight">ALIADO</span>
         </Link>
         <ThemeToggle />
       </nav>
-      <main className="flex-1 flex items-center justify-center px-6 pb-16">
+
+      {/* Content */}
+      <main className="flex-1 flex items-center justify-center px-4 pb-16">
         {children}
       </main>
+
+      {/* Subtle grid pattern background */}
+      <div className="fixed inset-0 -z-10 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-[size:64px_64px] opacity-[0.3]" />
     </div>
   )
 }

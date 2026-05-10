@@ -43,7 +43,7 @@ export default async function ChatsPage() {
     .order('created_at', { ascending: false })
 
   return (
-    <div className="flex h-[calc(100vh-8rem)] min-h-[600px] w-full bg-background">
+    <div className="flex h-[calc(100vh-7rem)] min-h-[500px] w-full animate-fade-in">
       <InboxClient 
         initialConversations={conversations || []} 
         agents={agents || []}

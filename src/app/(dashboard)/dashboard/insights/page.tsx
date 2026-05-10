@@ -22,8 +22,8 @@ import type { Insight, Company } from '@/types'
 const categoryConfig = {
   trend: { label: 'Tendencia', icon: TrendingUp, color: 'bg-blue-500' },
   complaint: { label: 'Queja', icon: AlertTriangle, color: 'bg-red-500' },
-  opportunity: { label: 'Oportunidad', icon: Lightbulb, color: 'bg-green-500' },
-  metric: { label: 'Métrica', icon: BarChart3, color: 'bg-purple-500' },
+  opportunity: { label: 'Oportunidad', icon: Lightbulb, color: 'bg-emerald-500' },
+  metric: { label: 'Métrica', icon: BarChart3, color: 'bg-amber-500' },
 }
 
 export default function InsightsPage() {
@@ -120,82 +120,85 @@ export default function InsightsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+        <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
       </div>
     )
   }
 
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="space-y-6 animate-fade-in">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between pb-4 border-b border-border">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Insights</h1>
-          <p className="text-muted-foreground mt-1">
+          <h1 className="text-2xl font-heading font-bold tracking-tight">Reportes</h1>
+          <p className="text-[13px] text-muted-foreground mt-0.5">
             Inteligencia de negocio generada por IA.
           </p>
         </div>
         <Button
           onClick={generateInsights}
           disabled={generating}
-          className="rounded-full px-5 gap-2"
+          size="sm"
+          className="shadow-command h-8 text-[13px] font-semibold gap-1.5"
         >
           {generating ? (
             <>
-              <Loader2 className="w-4 h-4 animate-spin" />
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
               Analizando...
             </>
           ) : (
             <>
-              <Sparkles className="w-4 h-4" />
-              Generar insights
+              <Sparkles className="w-3.5 h-3.5" />
+              Generar
             </>
           )}
         </Button>
       </div>
 
       {/* Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className="shadow-apple-sm border-border/50">
-          <CardContent className="pt-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 stagger-children">
+        <Card className="shadow-command border-border accent-strip">
+          <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground font-medium">Chats atendidos</p>
-                <p className="text-3xl font-bold tracking-tight mt-1">{totalChats}</p>
+                <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Chats atendidos</p>
+                <p className="text-3xl font-heading font-bold tracking-tight mt-1 tabular-nums">{totalChats}</p>
               </div>
-              <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center">
-                <MessageSquare className="w-5 h-5 text-muted-foreground" />
+              <div className="p-1.5 bg-muted text-muted-foreground">
+                <MessageSquare className="w-4 h-4" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="shadow-apple-sm border-border/50">
-          <CardContent className="pt-6">
+        <Card className="shadow-command border-border accent-strip-success">
+          <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground font-medium">Tasa de resolución</p>
-                <p className="text-3xl font-bold tracking-tight mt-1">{resolutionRate}%</p>
+                <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Resolución</p>
+                <p className="text-3xl font-heading font-bold tracking-tight mt-1 tabular-nums">{resolutionRate}%</p>
               </div>
-              <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center">
-                <CheckCircle2 className="w-5 h-5 text-muted-foreground" />
+              <div className="p-1.5 bg-muted text-muted-foreground">
+                <CheckCircle2 className="w-4 h-4" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="shadow-apple-sm border-border/50">
-          <CardContent className="pt-6">
+        <Card className="shadow-command border-border accent-strip-warning">
+          <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground font-medium">Tiempo ahorrado</p>
-                <p className="text-3xl font-bold tracking-tight mt-1">
-                  {Math.round(totalChats * 3.5)}
-                  <span className="text-base font-normal text-muted-foreground ml-1">min</span>
-                </p>
+                <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Tiempo ahorrado</p>
+                <div className="flex items-baseline gap-1 mt-1">
+                  <p className="text-3xl font-heading font-bold tracking-tight tabular-nums">
+                    {Math.round(totalChats * 3.5)}
+                  </p>
+                  <span className="text-sm font-medium text-muted-foreground">min</span>
+                </div>
               </div>
-              <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center">
-                <Clock className="w-5 h-5 text-muted-foreground" />
+              <div className="p-1.5 bg-muted text-muted-foreground">
+                <Clock className="w-4 h-4" />
               </div>
             </div>
           </CardContent>
@@ -203,68 +206,67 @@ export default function InsightsPage() {
       </div>
 
       {/* Insights Feed */}
-      <Card className="shadow-apple-sm border-border/50">
-        <CardHeader>
-          <CardTitle className="text-lg">Feed de insights</CardTitle>
-          <CardDescription>
-            La IA analiza las conversaciones de tus clientes y extrae patrones, quejas y oportunidades.
+      <Card className="shadow-command border-border">
+        <CardHeader className="border-b border-border bg-muted/40 py-3 px-4">
+          <CardTitle className="text-[13px] font-semibold uppercase tracking-wider text-muted-foreground">Feed de Inteligencia</CardTitle>
+          <CardDescription className="text-[12px]">
+            Patrones, quejas y oportunidades extraídos de conversaciones.
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-0">
           {insights.length === 0 ? (
             <div className="text-center py-12">
-              <Sparkles className="w-12 h-12 mx-auto text-muted-foreground/30 mb-4" />
-              <h3 className="font-semibold mb-1">Sin insights aún</h3>
-              <p className="text-sm text-muted-foreground max-w-sm mx-auto mb-6">
-                Cuando tu agente tenga conversaciones con clientes reales, podrás generar insights desde aquí.
+              <Sparkles className="w-8 h-8 mx-auto text-muted-foreground/20 mb-3" />
+              <h3 className="font-semibold text-sm mb-1">Sin datos aún</h3>
+              <p className="text-[12px] text-muted-foreground max-w-sm mx-auto mb-4">
+                Cuando tu agente tenga conversaciones, podrás generar insights desde aquí.
               </p>
               <Button
                 onClick={generateInsights}
                 disabled={generating}
                 variant="outline"
-                className="rounded-full gap-2"
+                size="sm"
+                className="h-7 text-[11px] font-semibold gap-1.5"
               >
-                <RefreshCw className={`w-4 h-4 ${generating ? 'animate-spin' : ''}`} />
+                <RefreshCw className={`w-3 h-3 ${generating ? 'animate-spin' : ''}`} />
                 Intentar generar
               </Button>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="divide-y divide-border">
               {insights.map((insight) => {
                 const config = categoryConfig[insight.category] || categoryConfig.trend
                 const Icon = config.icon
                 return (
                   <div
                     key={insight.id}
-                    className="p-5 rounded-xl bg-muted/30 border border-border/50 hover:bg-muted/50 transition-colors"
+                    className="px-4 py-3 flex items-start gap-3 hover:bg-muted/30 transition-colors"
                   >
-                    <div className="flex items-start gap-4">
-                      <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${config.color}`} />
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-2">
-                          <Badge variant="secondary" className="text-xs gap-1">
-                            <Icon className="w-3 h-3" />
-                            {config.label}
-                          </Badge>
-                          {insight.confidence_score && (
-                            <span className="text-xs text-muted-foreground">
-                              {insight.confidence_score}% confianza
-                            </span>
-                          )}
-                          <span className="text-xs text-muted-foreground ml-auto">
-                            {new Date(insight.generated_at).toLocaleDateString('es-MX', {
-                              day: 'numeric',
-                              month: 'short',
-                            })}
+                    <div className={`w-2 h-2 mt-1.5 flex-shrink-0 ${config.color}`} />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <Badge variant="secondary" className="text-[9px] font-bold gap-0.5 uppercase tracking-wider">
+                          <Icon className="w-2.5 h-2.5" />
+                          {config.label}
+                        </Badge>
+                        {insight.confidence_score && (
+                          <span className="text-[10px] text-muted-foreground tabular-nums">
+                            {insight.confidence_score}%
                           </span>
-                        </div>
-                        <p className="text-sm font-medium mb-1">{insight.insight_summary}</p>
-                        {insight.actionable_advice && (
-                          <p className="text-sm text-muted-foreground">
-                            💡 {insight.actionable_advice}
-                          </p>
                         )}
+                        <span className="text-[10px] text-muted-foreground/60 ml-auto tabular-nums">
+                          {new Date(insight.generated_at).toLocaleDateString('es-MX', {
+                            day: 'numeric',
+                            month: 'short',
+                          })}
+                        </span>
                       </div>
+                      <p className="text-[13px] font-medium leading-snug mb-0.5">{insight.insight_summary}</p>
+                      {insight.actionable_advice && (
+                        <p className="text-[12px] text-muted-foreground leading-snug">
+                          → {insight.actionable_advice}
+                        </p>
+                      )}
                     </div>
                   </div>
                 )

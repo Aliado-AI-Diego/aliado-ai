@@ -27,7 +27,7 @@ export default function PlaygroundPageWrapper() {
   return (
     <Suspense fallback={
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+        <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
       </div>
     }>
       <PlaygroundPage />
@@ -167,28 +167,39 @@ function PlaygroundPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+        <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
       </div>
     )
   }
 
+  const markdownComponents = {
+    strong: ({ node, ...props }: any) => <strong className="font-semibold" {...props} />,
+    ul: ({ node, ...props }: any) => <ul className="list-disc pl-4 my-1.5 space-y-0.5" {...props} />,
+    ol: ({ node, ...props }: any) => <ol className="list-decimal pl-4 my-1.5 space-y-0.5" {...props} />,
+    li: ({ node, ...props }: any) => <li className="leading-relaxed" {...props} />,
+    h1: ({ node, ...props }: any) => <h1 className="text-base font-bold my-1.5" {...props} />,
+    h2: ({ node, ...props }: any) => <h2 className="text-sm font-bold my-1.5" {...props} />,
+    h3: ({ node, ...props }: any) => <h3 className="text-[13px] font-bold my-1.5" {...props} />,
+    p: ({ node, ...props }: any) => <p className="mb-1.5 last:mb-0" {...props} />,
+  }
+
   return (
-    <div className="h-[calc(100vh-7rem)] lg:h-[calc(100vh-6rem)] flex flex-col animate-fade-in">
+    <div className="h-[calc(100vh-6.5rem)] lg:h-[calc(100vh-5.5rem)] flex flex-col animate-fade-in">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-3 pb-3 border-b border-border">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Testing Ground</h1>
-          <p className="text-sm text-muted-foreground">
+          <h1 className="text-xl font-heading font-bold tracking-tight">Simulador</h1>
+          <p className="text-[12px] text-muted-foreground">
             Prueba tu agente antes de publicarlo.
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <Select value={selectedAgentId} onValueChange={(val) => {
             if (val) setSelectedAgentId(val)
             resetChat()
           }}>
-            <SelectTrigger className="w-52 h-10 rounded-xl">
-              <SelectValue placeholder="Selecciona un agente" />
+            <SelectTrigger className="w-44 h-8 text-[12px]">
+              <SelectValue placeholder="Selecciona agente" />
             </SelectTrigger>
             <SelectContent>
               {agents.map((agent) => (
@@ -202,37 +213,37 @@ function PlaygroundPage() {
             variant="outline"
             size="icon"
             onClick={resetChat}
-            className="h-10 w-10 rounded-xl"
+            className="h-8 w-8"
           >
-            <RotateCcw className="w-4 h-4" />
+            <RotateCcw className="w-3.5 h-3.5" />
           </Button>
         </div>
       </div>
 
       {agents.length === 0 ? (
-        <Card className="flex-1 flex items-center justify-center shadow-apple-sm border-border/50">
+        <Card className="flex-1 flex items-center justify-center shadow-command border-border">
           <div className="text-center">
-            <Sparkles className="w-10 h-10 mx-auto text-muted-foreground/40 mb-3" />
-            <p className="text-muted-foreground text-sm">
-              Crea un agente primero para poder probarlo aquí.
+            <Sparkles className="w-8 h-8 mx-auto text-muted-foreground/30 mb-2" />
+            <p className="text-muted-foreground text-[13px]">
+              Crea un agente primero para probarlo aquí.
             </p>
           </div>
         </Card>
       ) : (
         <>
           {/* Chat Area */}
-          <Card className="flex-1 flex flex-col shadow-apple-sm border-border/50 overflow-hidden">
-            <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 space-y-6">
+          <Card className="flex-1 flex flex-col shadow-command border-border overflow-hidden">
+            <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 lg:p-6 space-y-4">
               {messages.length === 0 && !streamingText && (
-                <div className="flex-1 flex flex-col items-center justify-center h-full text-center py-20">
-                  <div className="w-14 h-14 rounded-2xl bg-muted flex items-center justify-center mb-4">
-                    <Bot className="w-7 h-7 text-muted-foreground" />
+                <div className="flex-1 flex flex-col items-center justify-center h-full text-center py-16">
+                  <div className="w-10 h-10 bg-muted flex items-center justify-center mb-3">
+                    <Bot className="w-5 h-5 text-muted-foreground" />
                   </div>
-                  <h3 className="font-semibold text-lg mb-1">
+                  <h3 className="font-semibold text-sm mb-0.5">
                     {selectedAgent?.agent_name || 'Agente'}
                   </h3>
-                  <p className="text-sm text-muted-foreground max-w-sm">
-                    Escribe un mensaje para probar cómo responde tu agente usando su base de conocimiento.
+                  <p className="text-[12px] text-muted-foreground max-w-sm">
+                    Escribe un mensaje para probar cómo responde tu agente.
                   </p>
                 </div>
               )}
@@ -240,42 +251,31 @@ function PlaygroundPage() {
               {messages.map((msg, i) => (
                 <div
                   key={i}
-                  className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                  className={`flex gap-2.5 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   {msg.role === 'assistant' && (
-                    <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Bot className="w-4 h-4" />
+                    <div className="w-7 h-7 bg-muted flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <Bot className="w-3.5 h-3.5" />
                     </div>
                   )}
                   <div
-                    className={`max-w-[75%] px-4 py-3 rounded-2xl text-sm leading-relaxed ${
+                    className={`max-w-[80%] lg:max-w-[70%] px-3 py-2.5 text-[13px] leading-relaxed ${
                       msg.role === 'user'
-                        ? 'bg-foreground text-background rounded-br-md'
-                        : 'bg-muted/70 rounded-bl-md'
+                        ? 'bg-foreground text-background'
+                        : 'bg-muted/70 border border-border'
                     }`}
                   >
                     {msg.role === 'user' ? (
                       <p className="whitespace-pre-wrap">{msg.content}</p>
                     ) : (
-                      <ReactMarkdown
-                        components={{
-                          strong: ({ node, ...props }) => <strong className="font-semibold" {...props} />,
-                          ul: ({ node, ...props }) => <ul className="list-disc pl-4 my-2 space-y-1" {...props} />,
-                          ol: ({ node, ...props }) => <ol className="list-decimal pl-4 my-2 space-y-1" {...props} />,
-                          li: ({ node, ...props }) => <li className="leading-relaxed" {...props} />,
-                          h1: ({ node, ...props }) => <h1 className="text-lg font-bold my-2" {...props} />,
-                          h2: ({ node, ...props }) => <h2 className="text-base font-bold my-2" {...props} />,
-                          h3: ({ node, ...props }) => <h3 className="text-sm font-bold my-2" {...props} />,
-                          p: ({ node, ...props }) => <p className="mb-2 last:mb-0" {...props} />,
-                        }}
-                      >
+                      <ReactMarkdown components={markdownComponents}>
                         {msg.content}
                       </ReactMarkdown>
                     )}
                   </div>
                   {msg.role === 'user' && (
-                    <div className="w-8 h-8 rounded-lg bg-foreground text-background flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <User className="w-4 h-4" />
+                    <div className="w-7 h-7 bg-foreground text-background flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <User className="w-3.5 h-3.5" />
                     </div>
                   )}
                 </div>
@@ -283,41 +283,30 @@ function PlaygroundPage() {
 
               {/* Streaming message */}
               {streamingText && (
-                <div className="flex gap-3 justify-start">
-                  <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <Bot className="w-4 h-4" />
+                <div className="flex gap-2.5 justify-start">
+                  <div className="w-7 h-7 bg-muted flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <Bot className="w-3.5 h-3.5" />
                   </div>
-                  <div className="max-w-[75%] px-4 py-3 rounded-2xl rounded-bl-md bg-muted/70 text-sm leading-relaxed">
-                    <ReactMarkdown
-                      components={{
-                        strong: ({ node, ...props }) => <strong className="font-semibold" {...props} />,
-                        ul: ({ node, ...props }) => <ul className="list-disc pl-4 my-2 space-y-1" {...props} />,
-                        ol: ({ node, ...props }) => <ol className="list-decimal pl-4 my-2 space-y-1" {...props} />,
-                        li: ({ node, ...props }) => <li className="leading-relaxed" {...props} />,
-                        h1: ({ node, ...props }) => <h1 className="text-lg font-bold my-2" {...props} />,
-                        h2: ({ node, ...props }) => <h2 className="text-base font-bold my-2" {...props} />,
-                        h3: ({ node, ...props }) => <h3 className="text-sm font-bold my-2" {...props} />,
-                        p: ({ node, ...props }) => <p className="mb-2 last:mb-0" {...props} />,
-                      }}
-                    >
+                  <div className="max-w-[80%] lg:max-w-[70%] px-3 py-2.5 bg-muted/70 border border-border text-[13px] leading-relaxed">
+                    <ReactMarkdown components={markdownComponents}>
                       {streamingText}
                     </ReactMarkdown>
-                    <span className="inline-block w-1.5 h-4 bg-foreground/60 animate-pulse mt-1 ml-0.5" />
+                    <span className="inline-block w-1 h-3.5 bg-foreground/50 animate-pulse mt-0.5 ml-0.5" />
                   </div>
                 </div>
               )}
 
               {/* Loading indicator */}
               {sending && !streamingText && (
-                <div className="flex gap-3 justify-start">
-                  <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
-                    <Bot className="w-4 h-4" />
+                <div className="flex gap-2.5 justify-start">
+                  <div className="w-7 h-7 bg-muted flex items-center justify-center flex-shrink-0">
+                    <Bot className="w-3.5 h-3.5" />
                   </div>
-                  <div className="px-4 py-3 rounded-2xl rounded-bl-md bg-muted/70">
-                    <div className="flex gap-1.5">
-                      <span className="w-2 h-2 bg-muted-foreground/40 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                      <span className="w-2 h-2 bg-muted-foreground/40 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                      <span className="w-2 h-2 bg-muted-foreground/40 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                  <div className="px-3 py-2.5 bg-muted/70 border border-border">
+                    <div className="flex gap-1">
+                      <span className="w-1.5 h-1.5 bg-muted-foreground/40 animate-bounce" style={{ animationDelay: '0ms' }} />
+                      <span className="w-1.5 h-1.5 bg-muted-foreground/40 animate-bounce" style={{ animationDelay: '150ms' }} />
+                      <span className="w-1.5 h-1.5 bg-muted-foreground/40 animate-bounce" style={{ animationDelay: '300ms' }} />
                     </div>
                   </div>
                 </div>
@@ -325,23 +314,23 @@ function PlaygroundPage() {
             </div>
 
             {/* Input */}
-            <div className="border-t border-border p-4">
-              <form onSubmit={sendMessage} className="flex items-center gap-3">
+            <div className="border-t border-border p-3">
+              <form onSubmit={sendMessage} className="flex items-center gap-2">
                 <Input
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   placeholder="Escribe un mensaje..."
                   disabled={sending || !selectedAgentId}
-                  className="h-11 rounded-xl flex-1"
+                  className="h-9 flex-1 text-[13px]"
                   autoFocus
                 />
                 <Button
                   type="submit"
                   size="icon"
                   disabled={sending || !inputValue.trim() || !selectedAgentId}
-                  className="h-11 w-11 rounded-xl"
+                  className="h-9 w-9"
                 >
-                  <Send className="w-4 h-4" />
+                  <Send className="w-3.5 h-3.5" />
                 </Button>
               </form>
             </div>

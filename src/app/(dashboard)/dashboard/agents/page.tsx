@@ -13,7 +13,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog'
 import {
   Select,
@@ -38,19 +37,6 @@ export default function AgentsPage() {
   const [newAgentTone, setNewAgentTone] = useState('profesional')
   const router = useRouter()
 
-  function handleCreateClick() {
-    const plan = company?.subscription_plan || 'free'
-    if (canCreateAgent(plan, agents.length)) {
-      setDialogOpen(true)
-    } else {
-      setUpsellOpen(true)
-    }
-  }
-
-  useEffect(() => {
-    loadData()
-  }, [])
-
   async function loadData() {
     const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
@@ -73,6 +59,19 @@ export default function AgentsPage() {
     }
     setLoading(false)
   }
+
+  function handleCreateClick() {
+    const plan = company?.subscription_plan || 'free'
+    if (canCreateAgent(plan, agents.length)) {
+      setDialogOpen(true)
+    } else {
+      setUpsellOpen(true)
+    }
+  }
+
+  useEffect(() => {
+    loadData()
+  }, [])
 
   async function createAgent() {
     if (!company || !newAgentName.trim()) return
@@ -117,23 +116,23 @@ export default function AgentsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+        <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
       </div>
     )
   }
 
   return (
-    <div className="space-y-8 animate-fade-in">
-      <div className="flex items-center justify-between">
+    <div className="space-y-6 animate-fade-in">
+      <div className="flex items-center justify-between pb-4 border-b border-border">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Agentes</h1>
-          <p className="text-muted-foreground mt-1">
+          <h1 className="text-2xl font-heading font-bold tracking-tight">Agentes</h1>
+          <p className="text-[13px] text-muted-foreground mt-0.5">
             Crea y configura tus agentes de IA.
           </p>
         </div>
         <div>
-          <Button onClick={handleCreateClick} className="rounded-full px-5 gap-2">
-            <Plus className="w-4 h-4" />
+          <Button onClick={handleCreateClick} size="sm" className="shadow-command h-8 text-[13px] font-semibold gap-1.5">
+            <Plus className="w-3.5 h-3.5" />
             Nuevo agente
           </Button>
         </div>
@@ -141,22 +140,22 @@ export default function AgentsPage() {
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
-              <DialogTitle>Crear nuevo agente</DialogTitle>
+              <DialogTitle className="text-lg font-heading font-bold">Crear nuevo agente</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 pt-2">
-              <div className="space-y-2">
-                <Label>Nombre del agente</Label>
+              <div className="space-y-1.5">
+                <Label className="text-[12px] font-semibold uppercase tracking-wider text-muted-foreground">Nombre del agente</Label>
                 <Input
                   placeholder="Ej: Asistente de ventas"
                   value={newAgentName}
                   onChange={(e) => setNewAgentName(e.target.value)}
-                  className="h-11 rounded-xl"
+                  className="h-10 text-[13px]"
                 />
               </div>
-              <div className="space-y-2">
-                <Label>Tono de comunicación</Label>
+              <div className="space-y-1.5">
+                <Label className="text-[12px] font-semibold uppercase tracking-wider text-muted-foreground">Tono de comunicación</Label>
                 <Select value={newAgentTone} onValueChange={(v) => v && setNewAgentTone(v)}>
-                  <SelectTrigger className="h-11 rounded-xl">
+                  <SelectTrigger className="h-10 text-[13px]">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -171,7 +170,7 @@ export default function AgentsPage() {
               <Button
                 onClick={createAgent}
                 disabled={creating || !newAgentName.trim()}
-                className="w-full h-11 rounded-xl"
+                className="w-full h-10 font-semibold text-[13px]"
               >
                 {creating ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -184,21 +183,21 @@ export default function AgentsPage() {
         </Dialog>
 
         <Dialog open={upsellOpen} onOpenChange={setUpsellOpen}>
-          <DialogContent className="sm:max-w-md text-center py-10">
-            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-              <Bot className="w-8 h-8 text-primary" />
+          <DialogContent className="sm:max-w-md text-center py-8">
+            <div className="w-12 h-12 bg-primary/10 flex items-center justify-center mx-auto mb-3">
+              <Bot className="w-6 h-6 text-primary" />
             </div>
             <DialogHeader>
-              <DialogTitle className="text-2xl font-bold text-center">Límite Alcanzado</DialogTitle>
+              <DialogTitle className="text-xl font-heading font-bold text-center">Límite Alcanzado</DialogTitle>
             </DialogHeader>
-            <p className="text-muted-foreground mt-2 mb-6">
-              Tu plan actual solo permite crear 1 agente. Mejora al Plan Pro para desbloquear agentes ilimitados y funciones avanzadas como Llamadas de Voz.
+            <p className="text-[13px] text-muted-foreground mt-2 mb-5">
+              Tu plan actual solo permite crear 1 agente. Mejora al Plan Pro para desbloquear agentes ilimitados y funciones avanzadas.
             </p>
-            <div className="flex flex-col gap-3">
-              <Button onClick={() => router.push('/dashboard/settings')} className="rounded-full h-11">
-                Ver planes disponibles
+            <div className="flex flex-col gap-2">
+              <Button onClick={() => router.push('/dashboard/settings')} className="h-10 font-semibold text-[13px]">
+                Ver planes
               </Button>
-              <Button variant="ghost" onClick={() => setUpsellOpen(false)} className="rounded-full">
+              <Button variant="ghost" onClick={() => setUpsellOpen(false)} className="text-[13px]">
                 Cancelar
               </Button>
             </div>
@@ -207,52 +206,54 @@ export default function AgentsPage() {
       </div>
 
       {agents.length === 0 ? (
-        <Card className="shadow-apple-sm border-border/50">
-          <CardContent className="flex flex-col items-center justify-center py-16">
-            <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center mb-4">
-              <Sparkles className="w-8 h-8 text-muted-foreground" />
+        <Card className="shadow-command border-border">
+          <CardContent className="flex flex-col items-center justify-center py-14">
+            <div className="w-12 h-12 bg-muted flex items-center justify-center mb-3">
+              <Sparkles className="w-6 h-6 text-muted-foreground" />
             </div>
-            <h3 className="text-lg font-semibold mb-1">Sin agentes aún</h3>
-            <p className="text-sm text-muted-foreground text-center max-w-sm mb-6">
+            <h3 className="text-sm font-semibold mb-1">Sin agentes aún</h3>
+            <p className="text-[12px] text-muted-foreground text-center max-w-sm mb-5">
               Crea tu primer agente de IA para empezar a atender a tus clientes automáticamente.
             </p>
             <Button
               onClick={handleCreateClick}
-              className="rounded-full px-6 gap-2"
+              size="sm"
+              className="shadow-command h-8 text-[13px] font-semibold gap-1.5"
             >
-              <Plus className="w-4 h-4" />
+              <Plus className="w-3.5 h-3.5" />
               Crear mi primer agente
             </Button>
           </CardContent>
         </Card>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 stagger-children">
           {agents.map((agent) => (
             <Card
               key={agent.id}
-              className="shadow-apple-sm hover-lift border-border/50 cursor-pointer group"
+              className="shadow-command border-border hover:border-primary/40 transition-all hover-command cursor-pointer group"
             >
               <Link href={`/dashboard/agents/${agent.id}`}>
-                <CardContent className="pt-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center group-hover:bg-foreground group-hover:text-background transition-colors">
-                      <Bot className="w-6 h-6" />
+                <CardContent className="p-4">
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="w-10 h-10 bg-muted flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                      <Bot className="w-5 h-5" />
                     </div>
                     <Badge
                       variant={agent.is_active ? 'default' : 'secondary'}
-                      className="text-xs"
+                      className="text-[9px] font-bold uppercase tracking-wider"
                     >
+                      {agent.is_active && <span className="w-1.5 h-1.5 bg-current rounded-full mr-1 pulse-live" />}
                       {agent.is_active ? 'Activo' : 'Inactivo'}
                     </Badge>
                   </div>
-                  <h3 className="font-semibold text-base mb-1">{agent.agent_name}</h3>
-                  <p className="text-xs text-muted-foreground capitalize mb-4">
+                  <h3 className="font-semibold text-[14px] mb-0.5">{agent.agent_name}</h3>
+                  <p className="text-[11px] text-muted-foreground capitalize mb-3">
                     Tono: {agent.tone === 'empatico' ? 'Empático' : agent.tone}
                   </p>
-                  <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                  <div className="flex items-center gap-3 text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">
                     <div className="flex items-center gap-1">
                       <Settings className="w-3 h-3" />
-                      Configurar
+                      Config
                     </div>
                     <div className="flex items-center gap-1">
                       <MessageSquare className="w-3 h-3" />

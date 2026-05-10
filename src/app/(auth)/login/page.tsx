@@ -38,17 +38,17 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="w-full max-w-sm">
-      <div className="text-center mb-8">
-        <h1 className="text-2xl font-bold tracking-tight mb-2">Bienvenido de vuelta</h1>
-        <p className="text-sm text-muted-foreground">
+    <div className="w-full max-w-sm animate-fade-in">
+      <div className="text-center mb-6">
+        <h1 className="text-xl font-heading font-bold tracking-tight mb-1">Bienvenido de vuelta</h1>
+        <p className="text-[13px] text-muted-foreground">
           Ingresa a tu cuenta para continuar.
         </p>
       </div>
 
-      <form onSubmit={handleLogin} className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="email" className="text-sm font-medium">
+      <form onSubmit={handleLogin} className="space-y-3">
+        <div className="space-y-1.5">
+          <Label htmlFor="email" className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
             Correo electrónico
           </Label>
           <Input
@@ -58,12 +58,12 @@ export default function LoginPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="h-11 rounded-xl"
+            className="h-10 text-[13px]"
           />
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="password" className="text-sm font-medium">
+        <div className="space-y-1.5">
+          <Label htmlFor="password" className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
             Contraseña
           </Label>
           <Input
@@ -73,17 +73,17 @@ export default function LoginPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="h-11 rounded-xl"
+            className="h-10 text-[13px]"
           />
         </div>
 
         {error && (
-          <p className="text-sm text-destructive text-center">{error}</p>
+          <p className="text-[12px] text-destructive text-center font-medium">{error}</p>
         )}
 
         <Button
           type="submit"
-          className="w-full h-11 rounded-xl font-medium"
+          className="w-full h-10 font-semibold text-[13px]"
           disabled={loading}
         >
           {loading ? (
@@ -91,15 +91,15 @@ export default function LoginPage() {
           ) : (
             <>
               Iniciar sesión
-              <ArrowRight className="w-4 h-4 ml-2" />
+              <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
             </>
           )}
         </Button>
       </form>
 
-      <p className="text-center text-sm text-muted-foreground mt-6">
+      <p className="text-center text-[12px] text-muted-foreground mt-5">
         ¿No tienes cuenta?{' '}
-        <Link href="/register" className="text-foreground font-medium hover:underline">
+        <Link href="/register" className="text-foreground font-semibold hover:text-primary transition-colors">
           Crear cuenta
         </Link>
       </p>

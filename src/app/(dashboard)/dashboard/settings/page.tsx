@@ -132,51 +132,51 @@ export default function SettingsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+        <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
       </div>
     )
   }
 
   return (
-    <div className="space-y-8 animate-fade-in max-w-2xl">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Configuración</h1>
-        <p className="text-muted-foreground mt-1">
+    <div className="space-y-6 animate-fade-in max-w-2xl">
+      <div className="pb-4 border-b border-border">
+        <h1 className="text-2xl font-heading font-bold tracking-tight">Configuración</h1>
+        <p className="text-[13px] text-muted-foreground mt-0.5">
           Administra tu cuenta y empresa.
         </p>
       </div>
 
       {/* Profile */}
-      <Card className="shadow-apple-sm border-border/50">
-        <CardHeader>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center">
-              <User className="w-5 h-5 text-muted-foreground" />
+      <Card className="shadow-command border-border">
+        <CardHeader className="py-3 px-4 border-b border-border bg-muted/40">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 bg-muted flex items-center justify-center">
+              <User className="w-4 h-4 text-muted-foreground" />
             </div>
             <div>
-              <CardTitle className="text-lg">Perfil</CardTitle>
-              <CardDescription>Tu información personal.</CardDescription>
+              <CardTitle className="text-[13px] font-semibold">Perfil</CardTitle>
+              <CardDescription className="text-[11px]">Tu información personal.</CardDescription>
             </div>
           </div>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label>Nombre completo</Label>
+        <CardContent className="p-4 space-y-3">
+          <div className="space-y-1.5">
+            <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Nombre completo</Label>
             <Input
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
-              className="h-11 rounded-xl"
+              className="h-9 text-[13px]"
             />
           </div>
-          <div className="space-y-2">
-            <Label>Correo electrónico</Label>
+          <div className="space-y-1.5">
+            <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Correo electrónico</Label>
             <Input
               value={profile?.id ? '' : ''}
               disabled
               placeholder="cargando..."
-              className="h-11 rounded-xl bg-muted/50"
+              className="h-9 text-[13px] bg-muted/50"
             />
-            <p className="text-xs text-muted-foreground">
+            <p className="text-[10px] text-muted-foreground">
               El correo no se puede modificar.
             </p>
           </div>
@@ -184,89 +184,89 @@ export default function SettingsPage() {
       </Card>
 
       {/* Company */}
-      <Card className="shadow-apple-sm border-border/50">
-        <CardHeader>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center">
-              <Building2 className="w-5 h-5 text-muted-foreground" />
+      <Card className="shadow-command border-border">
+        <CardHeader className="py-3 px-4 border-b border-border bg-muted/40">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 bg-muted flex items-center justify-center">
+              <Building2 className="w-4 h-4 text-muted-foreground" />
             </div>
             <div>
-              <CardTitle className="text-lg">Empresa</CardTitle>
-              <CardDescription>Información de tu negocio.</CardDescription>
+              <CardTitle className="text-[13px] font-semibold">Empresa</CardTitle>
+              <CardDescription className="text-[11px]">Información de tu negocio.</CardDescription>
             </div>
           </div>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label>Nombre de la empresa</Label>
+        <CardContent className="p-4 space-y-3">
+          <div className="space-y-1.5">
+            <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Nombre de la empresa</Label>
             <Input
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
-              className="h-11 rounded-xl"
+              className="h-9 text-[13px]"
             />
           </div>
-          <div className="space-y-2">
-            <Label>Industria</Label>
+          <div className="space-y-1.5">
+            <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Industria</Label>
             <Input
               value={industry}
               onChange={(e) => setIndustry(e.target.value)}
               placeholder="Ej: E-commerce, Restaurante, Consultora..."
-              className="h-11 rounded-xl"
+              className="h-9 text-[13px]"
             />
           </div>
-          <div className="space-y-2">
-            <Label>Sitio web</Label>
+          <div className="space-y-1.5">
+            <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Sitio web</Label>
             <Input
               value={websiteUrl}
               onChange={(e) => setWebsiteUrl(e.target.value)}
               placeholder="https://www.miempresa.com"
-              className="h-11 rounded-xl"
+              className="h-9 text-[13px]"
             />
           </div>
         </CardContent>
       </Card>
 
       {/* Subscription */}
-      <Card className="shadow-apple-sm border-border/50">
-        <CardHeader>
-          <CardTitle className="text-lg">Suscripción</CardTitle>
-          <CardDescription>Escala tu negocio con el plan perfecto para ti.</CardDescription>
+      <Card className="shadow-command border-border">
+        <CardHeader className="py-3 px-4 border-b border-border bg-muted/40">
+          <CardTitle className="text-[13px] font-semibold">Suscripción</CardTitle>
+          <CardDescription className="text-[11px]">Escala tu negocio con el plan correcto.</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="p-4 space-y-5">
           {company?.subscription_plan === 'free' || !company?.subscription_plan ? (
-            <div className="space-y-6">
-              <div className="flex items-center justify-center gap-3">
-                <Label className={`text-sm font-medium ${!isAnnualBilling ? 'text-foreground' : 'text-muted-foreground'}`}>Mensual</Label>
+            <div className="space-y-5">
+              <div className="flex items-center justify-center gap-2.5">
+                <Label className={`text-[12px] font-semibold ${!isAnnualBilling ? 'text-foreground' : 'text-muted-foreground'}`}>Mensual</Label>
                 <Switch 
                   checked={isAnnualBilling} 
                   onCheckedChange={setIsAnnualBilling}
                   className="data-[state=checked]:bg-primary" 
                 />
-                <Label className={`text-sm font-medium flex items-center gap-1.5 ${isAnnualBilling ? 'text-foreground' : 'text-muted-foreground'}`}>
+                <Label className={`text-[12px] font-semibold flex items-center gap-1.5 ${isAnnualBilling ? 'text-foreground' : 'text-muted-foreground'}`}>
                   Anual
-                  <Badge variant="outline" className="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border-none text-[10px]">2 MESES GRATIS</Badge>
+                  <Badge variant="outline" className="bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800 text-[9px] font-bold uppercase tracking-wider">2 Meses Gratis</Badge>
                 </Label>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
                 {Object.entries(PRICING_PLANS).map(([key, plan]) => {
                   const isPopular = key === 'profesional';
                   const price = isAnnualBilling ? plan.price_annual : plan.price_monthly;
                   const priceId = isAnnualBilling ? plan.stripe_annual_id : plan.stripe_monthly_id;
                   
                   return (
-                    <div key={key} className={`p-5 rounded-2xl bg-background flex flex-col relative transition-all duration-200 ${isPopular ? 'border-2 border-primary shadow-lg lg:-translate-y-2' : 'border border-border/50'}`}>
+                    <div key={key} className={`p-4 bg-background flex flex-col relative transition-all duration-150 ${isPopular ? 'border-2 border-primary shadow-command-md' : 'border border-border hover:border-primary/30'}`}>
                       {isPopular && (
-                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-gradient-to-r from-primary to-blue-500 text-white text-xs font-bold rounded-full shadow-md">
-                          RECOMENDADO
+                        <div className="absolute -top-2.5 left-3 px-2 py-0.5 bg-primary text-primary-foreground text-[9px] font-bold uppercase tracking-wider">
+                          Recomendado
                         </div>
                       )}
-                      <p className="text-lg font-bold mb-1">{plan.name}</p>
-                      <p className="text-3xl font-bold mb-4">${price}<span className="text-sm font-normal text-muted-foreground">/{isAnnualBilling ? 'año' : 'mes'}</span></p>
-                      <ul className="text-sm text-muted-foreground space-y-2 mb-6 flex-1">
+                      <p className="text-sm font-bold mb-0.5">{plan.name}</p>
+                      <p className="text-2xl font-bold mb-3 tabular-nums">${price}<span className="text-[11px] font-normal text-muted-foreground">/{isAnnualBilling ? 'año' : 'mes'}</span></p>
+                      <ul className="text-[12px] text-muted-foreground space-y-1.5 mb-4 flex-1">
                         {plan.features.map((feature, i) => (
-                          <li key={i} className="flex gap-2 items-start">
-                            <span className="text-primary mt-0.5">•</span>
+                          <li key={i} className="flex gap-1.5 items-start">
+                            <span className="text-primary mt-0.5 text-[10px]">■</span>
                             <span>{feature}</span>
                           </li>
                         ))}
@@ -275,9 +275,10 @@ export default function SettingsPage() {
                         onClick={() => handleManageBilling(priceId)}
                         disabled={managingBilling}
                         variant={isPopular ? 'default' : 'outline'}
-                        className={`w-full rounded-xl ${isPopular ? 'shadow-apple hover:shadow-apple-hover' : 'bg-background hover:bg-muted/50'}`}
+                        size="sm"
+                        className={`w-full h-8 text-[12px] font-semibold ${isPopular ? 'shadow-command' : ''}`}
                       >
-                        {managingBilling ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Suscribirse'}
+                        {managingBilling ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'Suscribirse'}
                       </Button>
                     </div>
                   )
@@ -285,31 +286,32 @@ export default function SettingsPage() {
               </div>
             </div>
           ) : (
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 rounded-2xl bg-muted/50 border border-border/50 gap-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-muted/40 border border-border gap-3">
               <div>
-                <div className="flex items-center gap-3 mb-2">
-                  <p className="text-lg font-bold capitalize">Plan {company.subscription_plan}</p>
-                  <Badge variant={company.subscription_status === 'active' ? 'default' : 'destructive'} className="text-xs">
+                <div className="flex items-center gap-2 mb-1">
+                  <p className="text-sm font-bold capitalize">Plan {company.subscription_plan}</p>
+                  <Badge variant={company.subscription_status === 'active' ? 'default' : 'destructive'} className="text-[9px] font-bold uppercase tracking-wider">
                     {company.subscription_status === 'active' ? 'Activo' : 'Problema de pago'}
                   </Badge>
                 </div>
                 {company.stripe_current_period_end && company.subscription_status === 'active' && (
-                  <p className="text-sm font-medium text-foreground mb-1">
+                  <p className="text-[12px] font-medium text-foreground mb-0.5">
                     Próximo cobro: {new Date(company.stripe_current_period_end).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
                   </p>
                 )}
-                <p className="text-sm text-muted-foreground">
-                  Estás suscrito al plan premium. Tu facturación se gestiona de forma segura a través de Stripe.
+                <p className="text-[11px] text-muted-foreground">
+                  Facturación gestionada de forma segura a través de Stripe.
                 </p>
               </div>
               <Button
                 variant="outline"
                 onClick={() => handleManageBilling()}
                 disabled={managingBilling}
-                className="shrink-0 rounded-xl"
+                size="sm"
+                className="shrink-0 h-8 text-[12px] font-semibold"
               >
-                {managingBilling ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-                Gestionar Facturación
+                {managingBilling ? <Loader2 className="w-3.5 h-3.5 animate-spin mr-1.5" /> : null}
+                Gestionar
               </Button>
             </div>
           )}
@@ -319,18 +321,19 @@ export default function SettingsPage() {
       <Button
         onClick={saveSettings}
         disabled={saving}
-        className="rounded-full px-6 gap-2"
+        size="sm"
+        className="shadow-command h-8 text-[13px] font-semibold gap-1.5"
       >
         {saving ? (
-          <Loader2 className="w-4 h-4 animate-spin" />
+          <Loader2 className="w-3.5 h-3.5 animate-spin" />
         ) : saved ? (
           <>
-            <CheckCircle2 className="w-4 h-4" />
+            <CheckCircle2 className="w-3.5 h-3.5" />
             Guardado
           </>
         ) : (
           <>
-            <Save className="w-4 h-4" />
+            <Save className="w-3.5 h-3.5" />
             Guardar cambios
           </>
         )}

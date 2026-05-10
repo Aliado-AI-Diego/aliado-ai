@@ -12,7 +12,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { ThumbsUp, ThumbsDown, Send, User, Bot, AlertCircle, Info, Clock, CheckCircle2 } from 'lucide-react'
+import { ThumbsUp, ThumbsDown, Send, User, Bot, AlertCircle, Info, Clock, CheckCircle2, ArrowLeft } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 
@@ -58,6 +58,7 @@ export function InboxClient({
   const [statusUpdating, setStatusUpdating] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
   const [isMounted, setIsMounted] = useState(false)
+  const [mobileView, setMobileView] = useState<'list' | 'chat'>('list')
 
   useEffect(() => {
     setIsMounted(true)
@@ -91,6 +92,15 @@ export function InboxClient({
 
     return () => { isMounted = false }
   }, [selectedConv?.id])
+
+  const handleSelectConversation = (conv: Conversation) => {
+    setSelectedConv(conv)
+    setMobileView('chat')
+  }
+
+  const handleBackToList = () => {
+    setMobileView('list')
+  }
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -140,32 +150,43 @@ export function InboxClient({
   }
 
   const isPaused = selectedConv?.status === 'escalated'
+  const activeCount = conversations.filter(c => c.status === 'active').length
+  const escalatedCount = conversations.filter(c => c.status === 'escalated').length
 
   if (!isMounted) return null
 
   return (
-    <Card className="grid grid-cols-[300px_1fr] h-[calc(100vh-8rem)] w-full border-border/60 shadow-executive overflow-hidden bg-background">
+    <div className="flex h-full w-full overflow-hidden border border-border shadow-command bg-card">
       
-      {/* Left Panel: Conversation List */}
-      <div className="border-r border-border/60 flex flex-col bg-muted/30 h-full overflow-hidden">
-        <div className="p-4 border-b border-border/60 bg-background">
-          <h2 className="font-semibold text-sm mb-3">Hilos de Conversación</h2>
+      {/* ═══ Left Panel: Conversation List ═══ */}
+      <div className={`
+        w-full lg:w-80 border-r border-border flex flex-col bg-background h-full overflow-hidden shrink-0
+        ${mobileView === 'chat' ? 'hidden lg:flex' : 'flex'}
+      `}>
+        {/* List Header */}
+        <div className="p-3 border-b border-border bg-card shrink-0">
+          <h2 className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mb-2">
+            Hilos
+          </h2>
           <div className="flex gap-4">
-            <div className="flex flex-col">
-              <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Activos</span>
-              <span className="font-semibold text-primary">{conversations.filter(c => c.status === 'active').length}</span>
+            <div className="flex items-center gap-1.5">
+              <div className="w-1.5 h-1.5 bg-primary pulse-live" />
+              <span className="text-[11px] font-semibold tabular-nums">{activeCount}</span>
+              <span className="text-[10px] text-muted-foreground">activos</span>
             </div>
-            <div className="flex flex-col">
-              <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Requieren Atención</span>
-              <span className="font-semibold text-orange-500">{conversations.filter(c => c.status === 'escalated').length}</span>
+            <div className="flex items-center gap-1.5">
+              <div className="w-1.5 h-1.5 bg-amber-500" />
+              <span className="text-[11px] font-semibold tabular-nums">{escalatedCount}</span>
+              <span className="text-[10px] text-muted-foreground">requieren atención</span>
             </div>
           </div>
         </div>
 
+        {/* Conversation List */}
         <ScrollArea className="flex-1">
           {conversations.length === 0 ? (
-            <div className="p-6 text-center text-sm text-muted-foreground">
-              No hay conversaciones disponibles.
+            <div className="p-6 text-center text-[13px] text-muted-foreground">
+              Sin conversaciones.
             </div>
           ) : (
             <div className="flex flex-col">
@@ -174,33 +195,33 @@ export function InboxClient({
                 return (
                   <button
                     key={conv.id}
-                    onClick={() => setSelectedConv(conv)}
-                    className={`w-full text-left p-4 border-b border-border/40 transition-colors
+                    onClick={() => handleSelectConversation(conv)}
+                    className={`w-full text-left px-3 py-3 border-b border-border/50 transition-colors
                       ${isSelected 
-                        ? 'bg-background shadow-[inset_3px_0_0_0_var(--color-primary)]' 
-                        : 'hover:bg-background/50 text-muted-foreground hover:text-foreground'
+                        ? 'bg-card accent-strip shadow-command' 
+                        : 'hover:bg-muted/40 text-muted-foreground hover:text-foreground'
                       }
                     `}
                   >
-                    <div className="flex justify-between items-start mb-1.5">
-                      <span className={`text-sm font-medium truncate pr-2 ${isSelected ? 'text-foreground' : ''}`}>
+                    <div className="flex justify-between items-start mb-1">
+                      <span className={`text-[13px] font-medium truncate pr-2 ${isSelected ? 'text-foreground' : ''}`}>
                         {conv.customer_identifier || 'Cliente Anónimo'}
                       </span>
-                      <span className="text-[10px] whitespace-nowrap opacity-70">
+                      <span className="text-[10px] tabular-nums whitespace-nowrap opacity-60">
                         {format(new Date(conv.created_at), "HH:mm")}
                       </span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Badge variant="outline" className="text-[10px] font-normal h-4 py-0 px-1.5">
+                    <div className="flex items-center gap-1.5">
+                      <Badge variant="outline" className="text-[9px] font-semibold h-4 py-0 px-1.5 uppercase tracking-wider">
                         {conv.channel}
                       </Badge>
                       {conv.status === 'escalated' && (
-                        <Badge variant="secondary" className="text-[10px] font-medium h-4 py-0 px-1.5 bg-orange-500/10 text-orange-600 border-orange-200">
+                        <Badge variant="secondary" className="text-[9px] font-bold h-4 py-0 px-1.5 bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800">
                           Atención
                         </Badge>
                       )}
                       {conv.is_test && (
-                        <Badge variant="secondary" className="text-[10px] font-normal h-4 py-0 px-1.5">Test</Badge>
+                        <Badge variant="secondary" className="text-[9px] font-semibold h-4 py-0 px-1.5">Test</Badge>
                       )}
                     </div>
                   </button>
@@ -211,33 +232,44 @@ export function InboxClient({
         </ScrollArea>
       </div>
 
-      {/* Right Panel: Chat Viewer (Threaded Document) */}
-      <div className="flex flex-col h-full overflow-hidden bg-background">
+      {/* ═══ Right Panel: Chat Viewer ═══ */}
+      <div className={`
+        flex-1 flex flex-col h-full overflow-hidden bg-background
+        ${mobileView === 'list' ? 'hidden lg:flex' : 'flex'}
+      `}>
         {selectedConv ? (
           <>
             {/* Thread Header */}
-            <div className="h-16 px-6 border-b border-border/60 flex items-center justify-between bg-card shrink-0 shadow-sm z-10">
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center border border-border/60">
-                  <User className="w-5 h-5 text-muted-foreground" />
+            <div className="h-13 px-3 lg:px-5 border-b border-border flex items-center justify-between bg-card shrink-0 shadow-command z-10">
+              <div className="flex items-center gap-3">
+                {/* Mobile back button */}
+                <button
+                  onClick={handleBackToList}
+                  className="lg:hidden p-1 hover:bg-muted transition-colors mr-1"
+                  aria-label="Volver a la lista"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                </button>
+                
+                <div className="w-8 h-8 bg-muted flex items-center justify-center border border-border">
+                  <User className="w-4 h-4 text-muted-foreground" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-sm">{selectedConv.customer_identifier || 'Cliente Anónimo'}</h3>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <span className="flex items-center gap-1">
-                      <Bot className="w-3 h-3" /> Agente asignado: <span className="font-medium text-foreground">{agents.find(a => a.id === selectedConv.agent_id)?.agent_name || 'Desconocido'}</span>
-                    </span>
+                  <h3 className="font-semibold text-[13px]">{selectedConv.customer_identifier || 'Cliente Anónimo'}</h3>
+                  <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
+                    <Bot className="w-2.5 h-2.5" />
+                    <span>{agents.find(a => a.id === selectedConv.agent_id)?.agent_name || '—'}</span>
                   </div>
                 </div>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
                 {isPaused ? (
-                  <Badge variant="secondary" className="bg-orange-500/10 text-orange-600 border-orange-200 font-medium px-2 py-1">
-                    <AlertCircle className="w-3.5 h-3.5 mr-1" /> Control Humano Activo
+                  <Badge variant="secondary" className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800 font-semibold text-[10px] px-2 py-0.5">
+                    <AlertCircle className="w-3 h-3 mr-1" /> Manual
                   </Badge>
                 ) : (
-                  <Badge variant="secondary" className="bg-green-500/10 text-green-600 border-green-200 font-medium px-2 py-1">
-                    <CheckCircle2 className="w-3.5 h-3.5 mr-1" /> IA Operando
+                  <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800 font-semibold text-[10px] px-2 py-0.5">
+                    <CheckCircle2 className="w-3 h-3 mr-1" /> IA
                   </Badge>
                 )}
                 <Button 
@@ -245,26 +277,26 @@ export function InboxClient({
                   size="sm"
                   onClick={handleTogglePause}
                   disabled={statusUpdating}
-                  className="shadow-sm"
+                  className="shadow-command h-7 text-[11px] font-semibold hidden sm:flex"
                 >
-                  {isPaused ? "Reanudar IA" : "Asumir Control Manual"}
+                  {isPaused ? "Reanudar IA" : "Control Manual"}
                 </Button>
               </div>
             </div>
 
-            {/* Document Messages */}
+            {/* Messages */}
             <div 
               ref={scrollRef}
-              className="flex-1 overflow-y-auto bg-muted/10 p-6"
+              className="flex-1 overflow-y-auto bg-muted/20 p-3 lg:p-5"
             >
-              <div className="max-w-3xl mx-auto space-y-6">
+              <div className="max-w-3xl mx-auto space-y-3">
                 {isLoadingMessages ? (
                   <div className="flex justify-center py-8">
-                    <div className="animate-spin w-5 h-5 border-2 border-primary border-t-transparent rounded-full" />
+                    <div className="animate-spin w-4 h-4 border-2 border-primary border-t-transparent rounded-full" />
                   </div>
                 ) : messages.length === 0 ? (
-                  <div className="text-center py-12 text-muted-foreground text-sm">
-                    No hay mensajes en este hilo.
+                  <div className="text-center py-12 text-muted-foreground text-[13px]">
+                    Sin mensajes en este hilo.
                   </div>
                 ) : (
                   messages.map((msg, idx) => {
@@ -273,38 +305,44 @@ export function InboxClient({
                     const isHumanAgent = msg.metadata?.is_human === true;
                     
                     return (
-                      <div key={msg.id || idx} className="bg-card border border-border/60 rounded-md shadow-sm overflow-hidden">
-                        {/* Header del Mensaje */}
-                        <div className={`px-4 py-2 border-b border-border/40 flex items-center justify-between text-xs
-                          ${isUser ? 'bg-muted/30' : 'bg-primary/5'}
+                      <div key={msg.id || idx} className={`bg-card border border-border shadow-command overflow-hidden ${isUser ? '' : isHumanAgent ? 'accent-strip' : ''}`}>
+                        {/* Message Header */}
+                        <div className={`px-3 py-1.5 border-b border-border/60 flex items-center justify-between text-[10px]
+                          ${isUser ? 'bg-muted/30' : isHumanAgent ? 'bg-blue-500/5' : 'bg-primary/5'}
                         `}>
-                          <div className="flex items-center gap-2 font-medium">
+                          <div className="flex items-center gap-1.5 font-semibold">
                             {isUser ? (
-                              <><User className="w-3.5 h-3.5 text-muted-foreground" /> Cliente</>
+                              <><User className="w-3 h-3 text-muted-foreground" /> Cliente</>
                             ) : isHumanAgent ? (
-                              <><User className="w-3.5 h-3.5 text-blue-500" /> Soporte (Tú)</>
+                              <><User className="w-3 h-3 text-blue-500" /> Soporte (Tú)</>
                             ) : (
-                              <><Bot className="w-3.5 h-3.5 text-primary" /> Aliado AI</>
+                              <><Bot className="w-3 h-3 text-primary" /> Aliado AI</>
                             )}
                           </div>
-                          <div className="flex items-center gap-3 text-muted-foreground">
-                            <span className="flex items-center gap-1">
-                              <Clock className="w-3 h-3" /> {format(new Date(msg.created_at), "HH:mm")}
+                          <div className="flex items-center gap-2 text-muted-foreground">
+                            <span className="flex items-center gap-1 tabular-nums">
+                              <Clock className="w-2.5 h-2.5" /> {format(new Date(msg.created_at), "HH:mm")}
                             </span>
                             {!isUser && !isHumanAgent && (
-                              <div className="flex items-center gap-1 border-l border-border/60 pl-3">
-                                <button onClick={() => handleFeedback(msg.id, 'up')} className={`hover:text-green-500 ${msg.metadata?.feedback === 'up' ? 'text-green-500' : ''}`}>
-                                  <ThumbsUp className="w-3 h-3" />
+                              <div className="flex items-center gap-0.5 border-l border-border/60 pl-2">
+                                <button 
+                                  onClick={() => handleFeedback(msg.id, 'up')} 
+                                  className={`p-0.5 hover:text-emerald-500 transition-colors ${msg.metadata?.feedback === 'up' ? 'text-emerald-500' : ''}`}
+                                >
+                                  <ThumbsUp className="w-2.5 h-2.5" />
                                 </button>
-                                <button onClick={() => handleFeedback(msg.id, 'down')} className={`hover:text-red-500 ${msg.metadata?.feedback === 'down' ? 'text-red-500' : ''}`}>
-                                  <ThumbsDown className="w-3 h-3" />
+                                <button 
+                                  onClick={() => handleFeedback(msg.id, 'down')} 
+                                  className={`p-0.5 hover:text-red-500 transition-colors ${msg.metadata?.feedback === 'down' ? 'text-red-500' : ''}`}
+                                >
+                                  <ThumbsDown className="w-2.5 h-2.5" />
                                 </button>
                               </div>
                             )}
                           </div>
                         </div>
-                        {/* Contenido del Mensaje */}
-                        <div className="p-4 text-sm leading-relaxed text-foreground/90 whitespace-pre-wrap">
+                        {/* Message Content */}
+                        <div className="px-3 py-2.5 text-[13px] leading-relaxed text-foreground/90 whitespace-pre-wrap">
                           {msg.content}
                         </div>
                       </div>
@@ -315,46 +353,46 @@ export function InboxClient({
             </div>
 
             {/* Input Area */}
-            <div className="p-4 border-t border-border/60 bg-card z-10 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.02)]">
+            <div className="p-3 border-t border-border bg-card z-10">
               {isPaused ? (
-                <form onSubmit={handleSendMessage} className="max-w-3xl mx-auto flex flex-col gap-3">
-                  <div className="text-xs font-medium text-orange-600 flex items-center gap-1">
-                    <AlertCircle className="w-3.5 h-3.5" /> Modo de respuesta manual activado. El cliente está esperando tu respuesta.
+                <form onSubmit={handleSendMessage} className="max-w-3xl mx-auto flex flex-col gap-2">
+                  <div className="text-[11px] font-semibold text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" /> Control manual activado
                   </div>
-                  <div className="flex gap-3">
+                  <div className="flex gap-2">
                     <Input 
                       value={replyText}
                       onChange={(e) => setReplyText(e.target.value)}
-                      placeholder="Escribe tu respuesta oficial aquí..." 
-                      className="flex-1 shadow-sm border-border/60"
+                      placeholder="Tu respuesta..." 
+                      className="flex-1 shadow-command border-border h-9 text-[13px]"
                       disabled={isSending}
                     />
-                    <Button type="submit" disabled={!replyText.trim() || isSending} className="shadow-sm">
-                      <Send className="w-4 h-4 mr-2" />
-                      Enviar Respuesta
+                    <Button type="submit" disabled={!replyText.trim() || isSending} size="sm" className="shadow-command h-9 text-[12px] font-semibold">
+                      <Send className="w-3.5 h-3.5 mr-1.5" />
+                      Enviar
                     </Button>
                   </div>
                 </form>
               ) : (
-                <div className="max-w-3xl mx-auto flex items-center justify-center gap-2 p-3 text-sm text-muted-foreground bg-muted/30 border border-border/60 rounded-md">
-                  <Info className="w-4 h-4" />
-                  La Inteligencia Artificial está gestionando este hilo. Asume el control manual si necesitas intervenir.
+                <div className="max-w-3xl mx-auto flex items-center gap-2 p-2.5 text-[12px] text-muted-foreground bg-muted/40 border border-border">
+                  <Info className="w-3.5 h-3.5 shrink-0" />
+                  <span>IA gestionando este hilo. Asume control manual para intervenir.</span>
                 </div>
               )}
             </div>
           </>
         ) : (
           <div className="flex-1 flex flex-col items-center justify-center text-muted-foreground p-8 text-center bg-muted/10">
-            <div className="w-16 h-16 rounded-full bg-card border border-border/60 flex items-center justify-center mb-4 shadow-sm">
-              <Info className="w-8 h-8 text-muted-foreground/50" />
+            <div className="w-12 h-12 bg-muted border border-border flex items-center justify-center mb-3">
+              <Info className="w-6 h-6 text-muted-foreground/40" />
             </div>
-            <h3 className="text-lg font-semibold text-foreground mb-1">Ningún hilo seleccionado</h3>
-            <p className="text-sm max-w-[300px]">
-              Selecciona una conversación del panel izquierdo para ver el historial o intervenir.
+            <h3 className="text-sm font-semibold text-foreground mb-1">Sin hilo seleccionado</h3>
+            <p className="text-[12px] max-w-[280px]">
+              Selecciona una conversación del panel izquierdo para ver el historial.
             </p>
           </div>
         )}
       </div>
-    </Card>
+    </div>
   )
 }
